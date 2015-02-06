@@ -1,0 +1,12 @@
+{
+  "content-type": "application/vnd.lookout.pa.deployable-item+json;v=1.0.0",
+  "name": "Border Patrol",
+  "component": {
+    "name": "Border Patrol",
+    "href": "components/borderPatrol"
+  },
+  "artifact": { //There could be other types of deployable items that have their own media types. This one is for artifactory items.
+    "name": "borderPatrol-1.0.23213",
+    "href": "artifactory/artifacts/artifactMetadataURL"
+  }
+}

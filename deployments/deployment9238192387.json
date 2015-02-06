@@ -1,0 +1,12 @@
+{
+  "content-type": "application/vnd.lookout.pa.deployment+json;v=1.0.0",
+  "deployedItem": {
+    "name": "Border Patrol",
+    "href": "artifactory/artifacts/borderPatrol-1.0.23213-FEATUREBRANCH-SNAPSHOT"
+  },
+  "environment": {
+    "name": "stage1",
+    "href": "environments/stage1"
+  },
+  "status": "in progress | complete | replaced"
+}

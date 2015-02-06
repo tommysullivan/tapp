@@ -1,0 +1,17 @@
+[
+  {
+    "name": "borderpatrol",
+    "hosts": [
+      "host1",
+      "host2",
+      "etc"
+    ]
+  },
+  {
+    "name": "checkpoint",
+    "hosts": [
+      "host3",
+      "host4"
+    ]
+  }
+]

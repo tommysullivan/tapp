@@ -1,0 +1,6 @@
+{
+  "content-type": "application/vnd.lookout.pa.environment+json;v=1.0.0",
+  "name": "Stage1",
+  "description": "This is used for MTP integration testing",
+  "consulKey": "consul/services#borderPatrol"
+}
