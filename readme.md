@@ -7,7 +7,10 @@ spread across multiple servers owned by different teams.
 The following guiding principles are suggested:
 https://confluence.corp.lookout.com/pages/viewpage.action?title=Platform+Automation&spaceKey=eng#PlatformAutomation-principles
 
-# General workflow (note that caching of all resources via ETAG would reduce unnecessary http traffic)
+# General workflow
+
+note: caching of all resources via ETAG would reduce unnecessary http traffic
+note: usage of media types allows these json definitions to evolve without lockstep
 
 1. Navigate to cicd/components to list, find, view, add, update or delete components
 2. Create or delete a deployment webhook for desired components
