@@ -1,0 +1,12 @@
+{
+  "content-type": "application/vnd.lookout.pa.deployable-items.artifactory+json;v=1.0.0",
+  "name": "Border Patrol",
+  "component": {
+    "name": "Border Patrol",
+    "href": "components/borderPatrol"
+  },
+  "artifact": {
+    "name": "borderPatrol-1.0.23213",
+    "href": "artifactory/artifacts/borderPatrol-1.0.23213-FEATUREBRANCH-SNAPSHOT"
+  }
+}

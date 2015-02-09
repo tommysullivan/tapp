@@ -1,9 +1,0 @@
-{
-  "content-type": "application/vnd.lookout.pa.integration-test+json;v=1.0.0",
-  "name": "DWA Tests",
-  "repository": "https://source.flexilis.local/platform-automation/pa-integration-tests-for-dwa",
-  "type": {
-    "name": "Platform Automation's Cucumber",
-    "href": "integration-test-types/pa-cucumber"
-  }
-}

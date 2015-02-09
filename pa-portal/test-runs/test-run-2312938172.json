@@ -1,10 +1,5 @@
 {
   "causedBy": "deploymentHREF",
-  "webhooks": {
-    "onProgress": "urlToCallBackWithProgressUpdates",
-    "onError": "urlToCalBackIfErrorOccurs",
-    "etc": "etc"
-  },
   "status": "status information that will be updated by the server",
   "jobs": [
     "hrefOfJenkinsJob1",
