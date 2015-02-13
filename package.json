@@ -1,0 +1,15 @@
+{
+  "name": "pa-portal",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "devDependencies":{
+    "chai":"latest",
+    "mocha": "latest"
+  },
+  "dependencies": {
+    "express": "3.5.0"
+  }
+}
