@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+#
+# EXAMPLE:
+#   ./bin/test # Runs all tests
+./node_modules/mocha/bin/mocha  test/**/*.js
+./node_modules/cucumber/bin/cucumber.js

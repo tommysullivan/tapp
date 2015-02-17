@@ -1,4 +1,5 @@
 .idea
 
 # node stuff
+*.log
 node_modules/*
