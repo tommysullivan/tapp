@@ -5,9 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "./node_modules/mocha/bin/mocha test/**/*.js",
-    "unit-test": "./node_modules/mocha/bin/mocha test/**/*.js",
-    "system-test": "./node_modules/cucumber/bin/cucumber.js"
+    "test": "./bin/test"
   },
   "devDependencies": {
     "mocha": "latest",
