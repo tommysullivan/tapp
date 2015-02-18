@@ -1,6 +1,6 @@
 module.exports = function Resources() {
     var urlsKeyedByFriendlyName = {
-        "deployment-notifications": "http://localhost:3000/deployment-notifications"
+        "test-runs": "http://localhost:3000/test-runs/"
     }
     return {
         urlForFriendlyName: function(friendlyName) {
