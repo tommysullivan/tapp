@@ -10,7 +10,8 @@
   "devDependencies": {
     "mocha": "latest",
     "chai": "latest",
-    "cucumber": "latest"
+    "cucumber": "latest",
+    "request": "latest"
   },
   "repository": "https://source.flexilis.local/platform-automation/pa-portal",
   "dependencies": {
