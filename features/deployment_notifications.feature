@@ -5,7 +5,7 @@ Feature: Notify PA Portal of a Deployment
 
   Scenario: Discover all of the Deployment Notification content types supported by PA's deployment-notifications resource
     When I request supported content types for the "deployment-notifications" resource
-    Then I receive a list including:
+    Then the supported content types include:
     """
     application/json
     application/vnd.lookout.cicd.deployment-notification+json;version=1.0.0
@@ -15,7 +15,7 @@ Feature: Notify PA Portal of a Deployment
 
   Scenario: Discover the supported methods for PA's deployment-notifications resource
     When I request supported methods for the "deployment-notifications" resource
-    Then I receive a list including:
+    Then the supported methods include:
     """
     GET
     HEAD
