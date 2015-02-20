@@ -1,24 +1,14 @@
-var Resources = require('../support/resources');
-
-var expect = require('chai').expect;
-var request = require('request');
-var resources = new Resources();
-
 module.exports = function() {
-    this.Given(/^I am requesting a test that is known to finish after "([^"]*)" seconds$/, function (seconds, callback) {
-        this.secondsUntilTestIsExpectedToFinish = seconds;
-        callback();
-    });
 
     this.When(/^I POST the following JSON to the "([^"]*)" resource:$/, function (resourceName, jsonString, callback) {
-        var url = resources.urlForFriendlyName(resourceName);
+        var url = this.resources.urlForFriendlyName(resourceName);
         var jsonHashToPost = JSON.parse(jsonString);
         var requestOptions = {
             method: 'POST',
             json: true,
             body: jsonHashToPost
         }
-        request(url, requestOptions, onRequestComplete.bind(this));
+        this.request(url, requestOptions, onRequestComplete.bind(this));
         function onRequestComplete(error, response, body) {
             if(error) callback.fail();
             this.recentResponse = response;
@@ -26,55 +16,69 @@ module.exports = function() {
         }
     });
 
-    this.Then(/^I receive a CREATED response code$/, function (callback) {
-        expect(this.recentResponse.statusCode).to.equal(302);
-        callback.pending();
+    this.Then(/^I receive a(n)? "([^"]*)" response$/, function (aOrAn, responseStatusName, callback) {
+        var responseStatus = this.responseStatuses.named(responseStatusName);
+        this.expect(this.recentResponse.statusCode).to.equal(responseStatus.code());
+        callback();
     });
 
-    this.Given(/^a URL is returned in the location header$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Then(/^a URL is returned in the location header$/, function (callback) {
+        var locationHeader = this.recentResponse.headers.location;
+        this.expect(locationHeader).not.to.be.null;
+        this.expect(locationHeader).to.be.a.string;
+        callback();
     });
 
-    this.Given(/^I remember the URL in the location header$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^I remember the URL for later use$/, function (callback) {
+        this.rememberedURL = this.recentResponse.headers.location;
+        callback();
     });
 
-    this.Then(/^when I call that URL, I receive a (\d+) containing the following JSON:$/, function (arg1, string, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+
+    this.When(/^I call the remembered URL$/, function (callback) {
+        this.request(this.rememberedURL, onRequestComplete.bind(this));
+        function onRequestComplete(error, response, body) {
+            if(error) callback.fail(error);
+            this.recentResponse = response;
+            this.recentResponseBody = body;
+            callback();
+        }
     });
 
-    this.Given(/^I wait "([^"]*)" extra seconds after the time the test should have passed$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^the Content\-Type of the representation is "([^"]*)"$/, function (expectedContentType, callback) {
+        this.expect(this.recentResponse.headers["content-type"]).to.equal(expectedContentType);
+        callback();
     });
 
-    this.Given(/^when I call that URL, I receive a (\d+) containing the following JSON:$/, function (arg1, string, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Then(/^the response contains the following JSON:$/, function (jsonString, callback) {
+        var jsonHash = JSON.parse(jsonString);
+        var responseJSONHash = JSON.parse(this.recentResponseBody);
+        this.expect(responseJSONHash.id).not.to.be.null;
+        jsonHash.id = responseJSONHash.id;
+        console.log('expected: '+jsonString);
+        console.log('actual: '+this.recentResponseBody);
+        this.expect(jsonHash).to.deep.equal(responseJSONHash);
+        callback();
     });
 
-    this.Given(/^when I call the URL in the JSON's result property, I get a (\d+) containing the following JSON:$/, function (arg1, string, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^a Jenkins or other job would be triggered and upon completion would PATCH the remembered URL with the following JSON:$/, function (jsonString, callback) {
+        var url = this.rememberedURL;
+        var jsonHashToPatch = JSON.parse(jsonString);
+        var requestOptions = {
+            method: 'PATCH',
+            json: true,
+            body: jsonHashToPatch
+        }
+        this.request(url, requestOptions, onRequestComplete.bind(this));
+        function onRequestComplete(error, response, body) {
+            if(error) callback.fail();
+            callback();
+        }
     });
 
-    this.Given(/^I am requesting a test for unsupported components$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^I remember the URL in the location header for later use$/, function (callback) {
+        this.rememberedURL = this.recentResponse.headers.location;
+        callback();
     });
-
-    this.Then(/^I receive a (\d+) Forbidden response code$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
-    });
-
-    this.Then(/^the body contains the message "([^"]*)"$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
-    });
-
 
 }

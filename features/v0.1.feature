@@ -4,7 +4,6 @@ Feature: Request a basic test run
   So that post-deployment integration tests can verify the functionality of the deployed-to environment and let me know the result
 
   Scenario Outline: Request Test Run for supported component(s)
-    Given I am requesting a test that is known to finish after "5" seconds
     When I POST the following JSON to the "test-runs" resource:
     """
     {
@@ -12,31 +11,42 @@ Feature: Request a basic test run
       "environment": "<environmentName>"
     }
     """
-    Then I receive a CREATED response code
+    Then I receive a "CREATED" response
     And a URL is returned in the location header
-    Given I remember the URL in the location header
-    Then when I call that URL, I receive a 200 containing the following JSON:
+
+    Given I remember the URL in the location header for later use
+    When I call the remembered URL
+    Then I receive an "OK" response
+    And the Content-Type of the representation is "application/vnd.lookout.pa.test-run+json;version=1.0.0"
+    And the response contains the following JSON:
     """
     {
+      "id": "generatedIdHere",
       "components": <componentsJSONArray>,
       "environment": "<environmentName>",
       "status": "in progress"
     }
     """
-    And I wait "5" extra seconds after the time the test should have passed
-    And when I call that URL, I receive a 200 containing the following JSON:
+
+    #TODO: Once we implement AUTO-234, we will not perform this GIVEN as we will expect a real system to update pa-portal with results
+    Given a Jenkins or other job would be triggered and upon completion would PATCH the remembered URL with the following JSON:
     """
     {
+      "status": "<expected status value>",
+      "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
+    }
+    """
+    When I call the remembered URL
+    Then I receive an "OK" response
+    And the Content-Type of the representation is "application/vnd.lookout.pa.test-run+json;version=1.0.0"
+    And the response contains the following JSON:
+    """
+    {
+      "id": "generatedIdHere",
       "components": <componentsJSONArray>,
       "environment": "<environmentName>",
       "status": "<expected status value>",
-      "result": "#{resultHref}"
-    }
-    """
-    And when I call the URL in the JSON's result property, I get a 200 containing the following JSON:
-    """
-    {
-      "thisWillBeA": "TestResult"
+      "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
     }
     """
   Examples:
@@ -48,26 +58,26 @@ Feature: Request a basic test run
     | ["passingComponent1", "passingComponent2"] | badEnvironment  | failed                |
 
 
-  Scenario: Request Test Run for unsupported component(s)
-    Given I am requesting a test for unsupported components
-    When I POST the following JSON to the "test-run-requests" resource:
-    """
-    {
-      "components": ["unsupported1", "unsupported2"],
-      "environment": "goodEnvironment"
-    }
-    """
-    Then I receive a 403 Forbidden response code
-    And the body contains the message "The requested components are not supported by pa portal at this time"
-
-  Scenario: Request Test Run for unsupported environment(s)
-    Given I am requesting a test for unsupported components
-    When I POST the following JSON to the "test-run-requests" resource:
-    """
-    {
-      "components": ["passingComponent1", "passingComponent2"],
-      "environment": "unsupportedEnvironment"
-    }
-    """
-    Then I receive a 403 Forbidden response code
-    And the body contains the message "The requested environment is not supported by pa portal at this time"
+#  Scenario: Request Test Run for unsupported component(s)
+#    Given I am requesting a test for unsupported components
+#    When I POST the following JSON to the "test-run-requests" resource:
+#    """
+#    {
+#      "components": ["unsupported1", "unsupported2"],
+#      "environment": "goodEnvironment"
+#    }
+#    """
+#    Then I receive a "Forbidden" response
+#    And the body contains the message "The requested components are not supported by pa portal at this time"
+#
+#  Scenario: Request Test Run for unsupported environment(s)
+#    Given I am requesting a test for unsupported components
+#    When I POST the following JSON to the "test-run-requests" resource:
+#    """
+#    {
+#      "components": ["passingComponent1", "passingComponent2"],
+#      "environment": "unsupportedEnvironment"
+#    }
+#    """
+#    Then I receive a "Forbidden" response
+#    And the body contains the message "The requested environment is not supported by pa portal at this time"

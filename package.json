@@ -4,14 +4,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node_modules/nodemon/bin/nodemon.js ./bin/www",
     "test": "./bin/test"
   },
   "devDependencies": {
     "mocha": "latest",
     "chai": "latest",
     "cucumber": "latest",
-    "request": "latest"
+    "request": "latest",
+    "nodemon": "latest"
   },
   "repository": "https://source.flexilis.local/platform-automation/pa-portal",
   "dependencies": {
