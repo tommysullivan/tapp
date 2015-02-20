@@ -5,6 +5,7 @@
   "responseStatuses": [
     [200, "OK" ],
     [201, "CREATED"],
-    [302, "UNAUTHORIZED"]
+    [302, "UNAUTHORIZED"],
+    [403, "FORBIDDEN"]
   ]
 }

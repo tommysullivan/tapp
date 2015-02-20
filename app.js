@@ -4,9 +4,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var PAPortalAPI = require('./server/pa_portal_api');
-var PAPortalConfiguration = require('./server/pa_portal_configuration');
-
 var app = express();
 
 app.use(logger('dev'));
@@ -15,10 +12,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var paPortalConfiguration = new PAPortalConfiguration();
-var paPortalAPI = new PAPortalAPI(paPortalConfiguration, express, app);
+//PA-Portal Specific Stuff
+var PAPortalAPI = require('./server/pa_portal_api');
+var paPortalConfigurationPath = __dirname + "/configuration/pa_portal_configuration.json";
+var paPortalAPI = new PAPortalAPI(paPortalConfigurationPath, express, app);
 var applicationController = paPortalAPI.newApplicationController();
 applicationController.start();
+//End PA-Portal specific stuff
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

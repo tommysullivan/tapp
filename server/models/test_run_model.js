@@ -1,7 +1,6 @@
-module.exports = function(testRunModelJSON, idUponSave, numSecondsToPretendThatTestingIsOccurring) {
+module.exports = function(testRunModelJSON, idUponSave, collections, supportedComponents, paPortalAPI) {
     return {
         id: function() {
-            if(!testRunModelJSON.hasOwnProperty('id')) throw new Error("test run model does not have an id");
             return testRunModelJSON.id;
         },
         save: function() {
@@ -9,7 +8,12 @@ module.exports = function(testRunModelJSON, idUponSave, numSecondsToPretendThatT
                 testRunModelJSON.id = idUponSave;
             }
         },
+        components: function() {
+            return collections.Collection(testRunModelJSON.components);
+        },
         executeTestRun: function() {
+            if(this.components().any(isUnsupported)) throw paPortalAPI.newUnsupportedComponentError();
+            function isUnsupported(componentName) { return !supportedComponents.contains(componentName); }
             testRunModelJSON.status = 'in progress';
         },
         applyPatch: function(patchJSON) {

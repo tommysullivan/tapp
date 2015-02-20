@@ -1,0 +1,8 @@
+{
+    "supportedComponents": [
+        "passingComponent1",
+        "passingComponent2",
+        "failingComponent1",
+        "failingComponent2"
+    ]
+}

@@ -55,8 +55,6 @@ module.exports = function() {
         var responseJSONHash = JSON.parse(this.recentResponseBody);
         this.expect(responseJSONHash.id).not.to.be.null;
         jsonHash.id = responseJSONHash.id;
-        console.log('expected: '+jsonString);
-        console.log('actual: '+this.recentResponseBody);
         this.expect(jsonHash).to.deep.equal(responseJSONHash);
         callback();
     });
@@ -80,5 +78,11 @@ module.exports = function() {
         this.rememberedURL = this.recentResponse.headers.location;
         callback();
     });
+
+    this.Then(/^the body contains the message "([^"]*)"$/, function (expectedMessage, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
 
 }

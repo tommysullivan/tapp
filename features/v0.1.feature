@@ -58,21 +58,20 @@ Feature: Request a basic test run
     | ["passingComponent1", "passingComponent2"] | badEnvironment  | failed                |
 
 
-#  Scenario: Request Test Run for unsupported component(s)
-#    Given I am requesting a test for unsupported components
-#    When I POST the following JSON to the "test-run-requests" resource:
-#    """
-#    {
-#      "components": ["unsupported1", "unsupported2"],
-#      "environment": "goodEnvironment"
-#    }
-#    """
-#    Then I receive a "Forbidden" response
-#    And the body contains the message "The requested components are not supported by pa portal at this time"
-#
+  Scenario: Request Test Run for unsupported component(s)
+    When I POST the following JSON to the "test-runs" resource:
+    """
+    {
+      "components": ["unsupported1", "unsupported2"],
+      "environment": "goodEnvironment"
+    }
+    """
+    Then I receive a "FORBIDDEN" response
+    And the Content-Type of the representation is "text/vnd.lookout.pa.unsupported-component-exception; charset=utf-8"
+    And the body contains the message "The requested components are not supported by pa portal at this time"
+
 #  Scenario: Request Test Run for unsupported environment(s)
-#    Given I am requesting a test for unsupported components
-#    When I POST the following JSON to the "test-run-requests" resource:
+#    When I POST the following JSON to the "test-runs" resource:
 #    """
 #    {
 #      "components": ["passingComponent1", "passingComponent2"],
