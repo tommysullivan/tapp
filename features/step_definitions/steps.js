@@ -61,5 +61,20 @@ module.exports = function() {
         callback.pending();
     });
 
+    this.Given(/^I am requesting a test for unsupported components$/, function (callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
+    this.Then(/^I receive a (\d+) Forbidden response code$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
+    this.Then(/^the body contains the message "([^"]*)"$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
 
 }
