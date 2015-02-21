@@ -1,4 +1,4 @@
-module.exports = function(testRunModelJSON, idUponSave, collections, supportedComponents, paPortalAPI) {
+module.exports = function(testRunModelJSON, idUponSave, collections, supportedComponents, exceptionsModel, supportedEnvironments) {
     return {
         id: function() {
             return testRunModelJSON.id;
@@ -11,9 +11,19 @@ module.exports = function(testRunModelJSON, idUponSave, collections, supportedCo
         components: function() {
             return collections.Collection(testRunModelJSON.components);
         },
-        executeTestRun: function() {
-            if(this.components().any(isUnsupported)) throw paPortalAPI.newUnsupportedComponentError();
+        environment: function() {
+            return testRunModelJSON.environment;
+        },
+        hasUnsupportedComponents: function() {
             function isUnsupported(componentName) { return !supportedComponents.contains(componentName); }
+            return this.components().any(isUnsupported);
+        },
+        hasUnsupportedEnvironment: function() {
+            return !supportedEnvironments.contains(this.environment());
+        },
+        executeTestRun: function() {
+            if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentError();
+            if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentError();
             testRunModelJSON.status = 'in progress';
         },
         applyPatch: function(patchJSON) {

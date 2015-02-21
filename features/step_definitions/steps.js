@@ -12,6 +12,7 @@ module.exports = function() {
         function onRequestComplete(error, response, body) {
             if(error) callback.fail();
             this.recentResponse = response;
+            this.recentResponseBody = body;
             callback();
         }
     });
@@ -80,9 +81,16 @@ module.exports = function() {
     });
 
     this.Then(/^the body contains the message "([^"]*)"$/, function (expectedMessage, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+        this.expect(this.recentResponseBody).to.equal(expectedMessage);
+        callback();
     });
 
+    this.Given(/^that the pa_portal_configuration.json does not list unsupported1 or unsupported2 as a supported component$/, function(callback) {
+        callback();
+    });
+
+    this.Given(/^that the pa_portal_configuration\.json does not list unsupportedEnvironment as a supported environment$/, function (callback) {
+        callback();
+    });
 
 }

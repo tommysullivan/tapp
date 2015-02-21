@@ -4,5 +4,23 @@
         "passingComponent2",
         "failingComponent1",
         "failingComponent2"
-    ]
+    ],
+    "supportedEnvironments": [
+        "supportedEnvironment"
+    ],
+    "exceptions": [
+        {
+            "name": "UnsupportedComponentException",
+            "contentType": "application/vnd.lookout.pa.unsupported-component-exception",
+            "message": "The requested components are not supported by pa portal at this time",
+            "httpStatusIfUncaught": 403
+        },
+        {
+            "name": "UnsupportedEnvironmentException",
+            "contentType": "application/vnd.lookout.pa.unsupported-environment-exception",
+            "message": "The requested environment is not supported by pa portal at this time",
+            "httpStatusIfUncaught": 403
+        }
+    ],
+    "defaultErrorContentType": "application/vnd.lookout.pa.exception"
 }

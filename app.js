@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var app = express();
 
@@ -13,9 +14,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //PA-Portal Specific Stuff
+var paPoralConfigurationJSON = JSON.parse(fs.readFileSync(__dirname + "/configuration/pa_portal_configuration.json"));
 var PAPortalAPI = require('./server/pa_portal_api');
-var paPortalConfigurationPath = __dirname + "/configuration/pa_portal_configuration.json";
-var paPortalAPI = new PAPortalAPI(paPortalConfigurationPath, express, app);
+var paPortalAPI = new PAPortalAPI(paPoralConfigurationJSON, express, app);
 var applicationController = paPortalAPI.newApplicationController();
 applicationController.start();
 //End PA-Portal specific stuff

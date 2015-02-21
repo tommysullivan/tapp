@@ -1,39 +1,30 @@
-module.exports = function(testRunsModel, paPortalAPI) {
+module.exports = function(testRunsModel, paPortalAPI, exceptionView) {
     return {
-        create: function(req, res) {
+        create: function(request, response) {
             try {
-                var testRunModel = testRunsModel.addNewTestRunViaJSON(req.body);
+                var testRunModel = testRunsModel.addNewTestRunViaJSON(request.body);
                 testRunModel.save();
                 testRunModel.executeTestRun();
-                res.statusCode = 201;
-                res.append('location', 'http://' + req.headers.host + '/test-runs/' + testRunModel.id());
-
+                response.statusCode = 201;
+                response.append('location', 'http://' + request.headers.host + '/test-runs/' + testRunModel.id());
+                response.end();
             }
-            catch(e) {
-                if(e.message = paPortalAPI.newUnsupportedComponentError().message) {
-                    res.append('Content-Type', 'text/vnd.lookout.pa.unsupported-component-exception');
-                    res.statusCode = 403;
-                    res.body = e.message;
-                } else {
-                    res.statusCode = 500;
-                }
-            }
-            finally {
-                res.end();
+            catch(exception) {
+                exceptionView.render(exception, response);
             }
         },
-        get: function(req, res, id) {
+        get: function(request, response, id) {
             var testRun = testRunsModel.getById(id);
-            res.append('Content-Type', 'application/vnd.lookout.pa.test-run+json;version=1.0.0');
-            res.statusCode = 200;
-            res.end(testRun.toJSONString());
+            response.append('Content-Type', 'application/vnd.lookout.pa.test-run+json;version=1.0.0');
+            response.statusCode = 200;
+            response.end(testRun.toJSONString());
         },
-        patch: function(req, res, id) {
+        patch: function(request, response, id) {
             var testRun = testRunsModel.getById(id);
-            testRun.applyPatch(req.body);
+            testRun.applyPatch(request.body);
             testRun.save();
-            res.statusCode = 204;
-            res.end();
+            response.statusCode = 204;
+            response.end();
         }
     }
 }

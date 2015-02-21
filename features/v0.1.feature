@@ -8,7 +8,7 @@ Feature: Request a basic test run
     """
     {
       "components": <componentsJSONArray>,
-      "environment": "<environmentName>"
+      "environment": "supportedEnvironment"
     }
     """
     Then I receive a "CREATED" response
@@ -23,7 +23,7 @@ Feature: Request a basic test run
     {
       "id": "generatedIdHere",
       "components": <componentsJSONArray>,
-      "environment": "<environmentName>",
+      "environment": "supportedEnvironment",
       "status": "in progress"
     }
     """
@@ -44,39 +44,40 @@ Feature: Request a basic test run
     {
       "id": "generatedIdHere",
       "components": <componentsJSONArray>,
-      "environment": "<environmentName>",
+      "environment": "supportedEnvironment",
       "status": "<expected status value>",
       "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
     }
     """
   Examples:
-    | componentsJSONArray                        | environmentName | expected status value |
-    | ["passingComponent1", "passingComponent2"] | goodEnvironment | passed                |
-    | ["passingComponent1", "failingComponent2"] | goodEnvironment | failed                |
-    | ["failingComponent1", "failingComponent2"] | goodEnvironment | failed                |
-    | ["failingComponent1", "passingComponent2"] | goodEnvironment | failed                |
-    | ["passingComponent1", "passingComponent2"] | badEnvironment  | failed                |
-
+    | componentsJSONArray                        | expected status value |
+    | ["passingComponent1", "passingComponent2"] | passed                |
+    | ["passingComponent1", "failingComponent2"] | failed                |
+    | ["failingComponent1", "failingComponent2"] | failed                |
+    | ["failingComponent1", "passingComponent2"] | failed                |
 
   Scenario: Request Test Run for unsupported component(s)
+    Given that the pa_portal_configuration.json does not list unsupported1 or unsupported2 as a supported component
     When I POST the following JSON to the "test-runs" resource:
     """
     {
-      "components": ["unsupported1", "unsupported2"],
-      "environment": "goodEnvironment"
+      "components": ["unsupportedComponent1", "unsupportedComponent2"],
+      "environment": "supportedEnvironment"
     }
     """
     Then I receive a "FORBIDDEN" response
-    And the Content-Type of the representation is "text/vnd.lookout.pa.unsupported-component-exception; charset=utf-8"
+    And the Content-Type of the representation is "application/vnd.lookout.pa.unsupported-component-exception+text; charset=utf-8"
     And the body contains the message "The requested components are not supported by pa portal at this time"
 
-#  Scenario: Request Test Run for unsupported environment(s)
-#    When I POST the following JSON to the "test-runs" resource:
-#    """
-#    {
-#      "components": ["passingComponent1", "passingComponent2"],
-#      "environment": "unsupportedEnvironment"
-#    }
-#    """
-#    Then I receive a "Forbidden" response
-#    And the body contains the message "The requested environment is not supported by pa portal at this time"
+  Scenario: Request Test Run for unsupported environment(s)
+    Given that the pa_portal_configuration.json does not list unsupportedEnvironment as a supported environment
+    When I POST the following JSON to the "test-runs" resource:
+    """
+    {
+      "components": ["passingComponent1", "passingComponent2"],
+      "environment": "unsupportedEnvironment"
+    }
+    """
+    Then I receive a "FORBIDDEN" response
+    And the Content-Type of the representation is "application/vnd.lookout.pa.unsupported-environment-exception+text; charset=utf-8"
+    And the body contains the message "The requested environment is not supported by pa portal at this time"
