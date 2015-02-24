@@ -1,0 +1,7 @@
+# git stuff
+.git/
+.gitignore
+
+# node
+node_modules/
+test/
