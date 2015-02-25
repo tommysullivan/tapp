@@ -1,5 +1,5 @@
 {
     "content-type": "application/vnd.lookout.cicd.webhook.deployment+json;version=1.0.0",
     "name": "PA deployment notification for borderpatrol",
-    "url": "pa-portal/deployment-notifications/"
+    "url": "tapp/deployment-notifications/"
 }
