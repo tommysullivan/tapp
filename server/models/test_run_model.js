@@ -22,8 +22,8 @@ module.exports = function(testRunModelJSON, idUponSave, collections, supportedCo
             return !supportedEnvironments.contains(this.environment());
         },
         executeTestRun: function() {
-            if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentError();
-            if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentError();
+            if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentException();
+            if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentException();
             testRunModelJSON.status = 'in progress';
         },
         applyPatch: function(patchJSON) {

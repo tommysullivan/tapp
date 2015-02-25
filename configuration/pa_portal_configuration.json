@@ -20,6 +20,12 @@
             "contentType": "application/vnd.lookout.pa.unsupported-environment-exception",
             "message": "The requested environment is not supported by pa portal at this time",
             "httpStatusIfUncaught": 403
+        },
+        {
+            "name": "DuplicateIdException",
+            "contentType": "application/vnd.lookout.pa.duplicate-id-exception",
+            "message": "The record could not be created because a record with that id already exists",
+            "httpStatusIfUncaught": 403
         }
     ],
     "defaultErrorContentType": "application/vnd.lookout.pa.exception"

@@ -1,8 +1,11 @@
 module.exports = function(paPortalAPI) {
     return {
         start: function() {
-            var testRunsRoute = paPortalAPI.newTestRunsRoute();
-            testRunsRoute.setupRouter();
+            var routes = [
+                paPortalAPI.newTestRunsRoute(),
+                paPortalAPI.newDeploymentNotificationsRoutes()
+            ]
+            routes.forEach(function(route) { route.setupRouter(); });
         }
     }
 }

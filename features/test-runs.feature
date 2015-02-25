@@ -1,7 +1,7 @@
-Feature: Request a basic test run
-  As an automated software deployment pipeline system
-  I want to request a basic test run
-  So that post-deployment integration tests can verify the functionality of the deployed-to environment and let me know the result
+Feature: test-runs
+  As a human or program responsible for assuring quality
+  I want to request an integration test run for one or more components in a particular environment
+  So that the integration tests can verify the functionality and let me know the result
 
   Scenario Outline: Request Test Run for supported component(s)
     When I POST the following JSON to the "test-runs" resource:
@@ -21,7 +21,7 @@ Feature: Request a basic test run
     And the response contains the following JSON:
     """
     {
-      "id": "generatedIdHere",
+      "id": {{generatedId}},
       "components": <componentsJSONArray>,
       "environment": "supportedEnvironment",
       "status": "in progress"
@@ -42,7 +42,7 @@ Feature: Request a basic test run
     And the response contains the following JSON:
     """
     {
-      "id": "generatedIdHere",
+      "id": {{generatedId}},
       "components": <componentsJSONArray>,
       "environment": "supportedEnvironment",
       "status": "<expected status value>",

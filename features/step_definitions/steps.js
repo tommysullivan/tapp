@@ -2,6 +2,11 @@ module.exports = function() {
 
     this.When(/^I POST the following JSON to the "([^"]*)" resource:$/, function (resourceName, jsonString, callback) {
         var url = this.resources.urlForFriendlyName(resourceName);
+        if(jsonString.indexOf("{{preExistingId}}")!=-1) {
+            this.preExistingId = Math.random()*1000000|0;
+            jsonString = jsonString.replace("{{preExistingId}}", this.preExistingId);
+        }
+
         var jsonHashToPost = JSON.parse(jsonString);
         var requestOptions = {
             method: 'POST',
@@ -51,12 +56,19 @@ module.exports = function() {
         callback();
     });
 
-    this.Then(/^the response contains the following JSON:$/, function (jsonString, callback) {
-        var jsonHash = JSON.parse(jsonString);
+    this.Then(/^the response contains the following JSON:$/, function (expectedJSONString, callback) {
         var responseJSONHash = JSON.parse(this.recentResponseBody);
         this.expect(responseJSONHash.id).not.to.be.null;
-        jsonHash.id = responseJSONHash.id;
-        this.expect(jsonHash).to.deep.equal(responseJSONHash);
+        expectedJSONString = expectedJSONString.replace("{{generatedId}}", responseJSONHash.id);
+        expectedJSONString = expectedJSONString.replace("{{preExistingId}}", this.preExistingId);
+        var jsonHash = JSON.parse(expectedJSONString);
+        try {
+            this.expect(jsonHash).to.deep.equal(responseJSONHash);
+        }
+        catch(e) {
+            var message = "expected deep equality.\n  expected: "+expectedJSONString+"\n  actual: "+this.recentResponseBody;
+            throw new Error(message);
+        }
         callback();
     });
 

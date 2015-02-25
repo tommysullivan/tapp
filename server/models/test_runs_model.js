@@ -1,7 +1,7 @@
-module.exports = function(testRunModelsArray, factory) {
+module.exports = function(testRunModelsArray, paPortalAPI) {
     return {
         addNewTestRunViaJSON: function(testRunJSONHash) {
-            var testRunModel = factory.newTestRunModel(testRunJSONHash);
+            var testRunModel = paPortalAPI.newTestRunModel(testRunJSONHash);
             testRunModelsArray.push(testRunModel);
             return testRunModel;
         },

@@ -1,6 +1,7 @@
 {
   "urlsKeyedByFriendlyName": {
-    "test-runs": "http://localhost:3000/test-runs/"
+    "test-runs": "http://localhost:3000/test-runs/",
+    "deployment-notifications":  "http://localhost:3000/deployment-notifications/"
   },
   "responseStatuses": [
     [200, "OK" ],

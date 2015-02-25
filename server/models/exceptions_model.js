@@ -12,10 +12,13 @@ module.exports = function(exceptionConfigCollection) {
             error.httpStatusIfUncaught = configuredException.httpStatusIfUncaught;
             return error;
         },
-        newUnsupportedComponentError: function() {
+        newDuplicateIdException: function(id) {
+            return this.newException('DuplicateIdException');
+        },
+        newUnsupportedComponentException: function() {
             return this.newException('UnsupportedComponentException');
         },
-        newUnsupportedEnvironmentError: function() {
+        newUnsupportedEnvironmentException: function() {
             return this.newException('UnsupportedEnvironmentException');
         }
     }
