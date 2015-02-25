@@ -35,14 +35,8 @@ module.exports = function() {
         callback();
     });
 
-    this.Given(/^I remember the URL for later use$/, function (callback) {
-        this.rememberedURL = this.recentResponse.headers.location;
-        callback();
-    });
-
-
-    this.When(/^I call the remembered URL$/, function (callback) {
-        this.request(this.rememberedURL, onRequestComplete.bind(this));
+    this.When(/^I call the remembered "([^"]*)"$/, function (rememberedItemName, callback) {
+        this.request(this.rememberedItems[rememberedItemName], onRequestComplete.bind(this));
         function onRequestComplete(error, response, body) {
             if(error) callback.fail(error);
             this.recentResponse = response;
@@ -57,11 +51,14 @@ module.exports = function() {
     });
 
     this.Then(/^the response contains the following JSON:$/, function (expectedJSONString, callback) {
+        if(this.rememberedItems==null) this.rememberedItems={}
         var responseJSONHash = JSON.parse(this.recentResponseBody);
         this.expect(responseJSONHash.id).not.to.be.null;
         expectedJSONString = expectedJSONString.replace("{{generatedId}}", responseJSONHash.id);
         expectedJSONString = expectedJSONString.replace("{{preExistingId}}", this.preExistingId);
         expectedJSONString = expectedJSONString.replace("{{generatedTestRunHref}}", responseJSONHash.testRunHref);
+        expectedJSONString = expectedJSONString.replace("{{rememberedNotificationURL}}", this.rememberedItems['notification url']);
+
         var jsonHash = JSON.parse(expectedJSONString);
         try {
             this.expect(jsonHash).to.deep.equal(responseJSONHash);
@@ -73,8 +70,12 @@ module.exports = function() {
         callback();
     });
 
-    this.Given(/^a Jenkins or other job would be triggered and upon completion would PATCH the remembered URL with the following JSON:$/, function (jsonString, callback) {
-        var url = this.rememberedURL;
+    this.Given(/^a Jenkins job would do the following PATCH after we complete AUTO\-(\d+)$/, function (arg1, callback) {
+        callback();
+    });
+
+    this.When(/^I PATCH the remembered "([^"]*)" with the following JSON:$/, function (rememberedItemName, jsonString, callback) {
+        var url = this.rememberedItems[rememberedItemName];
         var jsonHashToPatch = JSON.parse(jsonString);
         var requestOptions = {
             method: 'PATCH',
@@ -88,10 +89,12 @@ module.exports = function() {
         }
     });
 
-    this.Given(/^I remember the URL in the location header for later use$/, function (callback) {
-        this.rememberedURL = this.recentResponse.headers.location;
+    this.Given(/^I remember the location header as "([^"]*)" for later use$/, function (rememberedItemName, callback) {
+        if(this.rememberedItems==null) this.rememberedItems = {}
+        this.rememberedItems[rememberedItemName] = this.recentResponse.headers.location;
         callback();
     });
+
 
     this.Then(/^the body contains the message "([^"]*)"$/, function (expectedMessage, callback) {
         this.expect(this.recentResponseBody).to.equal(expectedMessage);
@@ -106,11 +109,11 @@ module.exports = function() {
         callback();
     });
 
-    this.Given(/^I remember the URL in the response's "([^"]*)" property$/, function (propertyName, callback) {
+    this.Given(/^I remember the "([^"]*)" property of the response as "([^"]*)" for later use$/, function (propertyName, rememberedItemName, callback) {
+        if(this.rememberedItems==null) this.rememberedItems = {}
         var responseJSON = JSON.parse(this.recentResponseBody);
-        this.rememberedURL = responseJSON[propertyName];
+        this.rememberedItems[rememberedItemName] = responseJSON[propertyName];
+        callback();
     });
-
-
 
 }

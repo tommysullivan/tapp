@@ -29,6 +29,7 @@ module.exports = function(testRunModelJSON, idUponSave, collections, supportedCo
         applyPatch: function(patchJSON) {
             if(patchJSON.hasOwnProperty('status')) testRunModelJSON.status = patchJSON.status;
             if(patchJSON.hasOwnProperty('testResultHref')) testRunModelJSON.testResultHref = patchJSON.testResultHref;
+            //TODO: POST to the deployment resource.
         },
         toJSONString: function() {
             return JSON.stringify(testRunModelJSON);

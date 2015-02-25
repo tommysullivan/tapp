@@ -11,13 +11,14 @@ module.exports = function DeploymentNotificationModel(deploymentNotificationMode
         environment: function() {
             return deploymentNotificationModelJSON.environment;
         },
-        processNotification: function(processingCompleteCallback) {
+        processNotification: function(processingCompleteCallback, selfURL) {
             var requestOptions = {
                 method: 'POST',
                 json: true,
                 body: {
                     "components": [this.service()],
-                    "environment": this.environment()
+                    "environment": this.environment(),
+                    "triggeredBy": selfURL
                 }
             }
             request(testRunsURL, requestOptions, onRequestComplete.bind(this));

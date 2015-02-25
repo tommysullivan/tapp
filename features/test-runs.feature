@@ -14,8 +14,8 @@ Feature: test-runs
     Then I receive a "CREATED" response
     And a URL is returned in the location header
 
-    Given I remember the URL in the location header for later use
-    When I call the remembered URL
+    Given I remember the location header as "test run URL" for later use
+    When I call the remembered "test run URL"
     Then I receive an "OK" response
     And the Content-Type of the representation is "application/vnd.lookout.pa.test-run+json;version=1.0.0"
     And the response contains the following JSON:
@@ -29,14 +29,15 @@ Feature: test-runs
     """
 
     #TODO: Once we implement AUTO-234, we will not perform this GIVEN as we will expect a real system to update pa-portal with results
-    Given a Jenkins or other job would be triggered and upon completion would PATCH the remembered URL with the following JSON:
+    Given a Jenkins job would do the following PATCH after we complete AUTO-234
+    When I PATCH the remembered "test run URL" with the following JSON:
     """
     {
       "status": "<expected status value>",
       "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
     }
     """
-    When I call the remembered URL
+    When I call the remembered "test run URL"
     Then I receive an "OK" response
     And the Content-Type of the representation is "application/vnd.lookout.pa.test-run+json;version=1.0.0"
     And the response contains the following JSON:

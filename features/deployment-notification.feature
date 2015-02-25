@@ -24,8 +24,8 @@ Scenario:
   Then I receive a "CREATED" response
   And a URL is returned in the location header
 
-  Given I remember the URL in the location header for later use
-  When I call the remembered URL
+  Given I remember the location header as "notification url" for later use
+  When I call the remembered "notification url"
   Then I receive an "OK" response
   And the Content-Type of the representation is "application/vnd.lookout.deploydb.deployment-notification+json;version=1.0.0"
   And the response contains the following JSON:
@@ -47,8 +47,8 @@ Scenario:
     }
   """
 
-  Given I remember the URL in the response's "reactionHref" property
-  When I call the remembered URL
+  Given I remember the "testRunHref" property of the response as "test run URL" for later use
+  When I call the remembered "test run URL"
   Then I receive an "OK" response
   And the Content-Type of the representation is "application/vnd.lookout.pa.test-run+json;version=1.0.0"
   And the response contains the following JSON:
@@ -57,6 +57,7 @@ Scenario:
       "id": {{generatedId}},
       "components": ["passingComponent1"],
       "environment": "supportedEnvironment",
-      "status": "in progress"
+      "status": "in progress",
+      "triggeredBy": "{{rememberedNotificationURL}}"
     }
   """
