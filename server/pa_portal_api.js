@@ -1,5 +1,7 @@
 var ApplicationController = require('./controllers/application_controller');
 
+var ExternalRoutes = require('./routes/external_routes');
+
 var TestRunsRoute = require('./routes/test_runs_route');
 var TestRunsModel = require('./models/test_runs_model');
 var TestRunModel = require('./models/test_run_model');
@@ -50,6 +52,11 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
             return new ExceptionsModel(this.newExceptionConfigCollection());
         },
 
+        //EXTERNAL ROUTES
+        newExternalRoutes: function() {
+            return new ExternalRoutes(expressApp, this.newExpressRouter());
+        },
+
         //TEST RUNS
         newTestRunsRoute: function() {
             return new TestRunsRoute(expressApp, this.newExpressRouter(), this.newTestRunsController());
@@ -68,7 +75,10 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
                 collections,
                 this.newSupportedComponents(),
                 this.newExceptionsModel(),
-                this.newSupportedEnvironments()
+                this.newSupportedEnvironments(),
+                request,
+                this,
+                paPortalConfigurationJSON['promotionsURLTemplate']
             );
         },
 

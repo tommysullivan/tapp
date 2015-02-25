@@ -55,9 +55,12 @@ module.exports = function() {
         var responseJSONHash = JSON.parse(this.recentResponseBody);
         this.expect(responseJSONHash.id).not.to.be.null;
         expectedJSONString = expectedJSONString.replace("{{generatedId}}", responseJSONHash.id);
+        expectedJSONString = expectedJSONString.replace("{{generatedPromotionHref}}", responseJSONHash.promotionHref);
         expectedJSONString = expectedJSONString.replace("{{preExistingId}}", this.preExistingId);
         expectedJSONString = expectedJSONString.replace("{{generatedTestRunHref}}", responseJSONHash.testRunHref);
         expectedJSONString = expectedJSONString.replace("{{rememberedNotificationURL}}", this.rememberedItems['notification url']);
+        expectedJSONString = expectedJSONString.replace("{{rememberedTestRunURL}}", this.rememberedItems['test run URL']);
+
 
         var jsonHash = JSON.parse(expectedJSONString);
         try {

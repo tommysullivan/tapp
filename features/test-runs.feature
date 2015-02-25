@@ -28,7 +28,6 @@ Feature: test-runs
     }
     """
 
-    #TODO: Once we implement AUTO-234, we will not perform this GIVEN as we will expect a real system to update pa-portal with results
     Given a Jenkins job would do the following PATCH after we complete AUTO-234
     When I PATCH the remembered "test run URL" with the following JSON:
     """

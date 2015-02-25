@@ -1,4 +1,7 @@
 module.exports = function(testRunsModel, paPortalAPI, exceptionView) {
+    function getURL(request, testRunModel) {
+        return 'http://' + request.headers.host + '/test-runs/' + testRunModel.id();
+    }
     return {
         create: function(request, response) {
             try {
@@ -6,7 +9,7 @@ module.exports = function(testRunsModel, paPortalAPI, exceptionView) {
                 testRunModel.save();
                 testRunModel.executeTestRun();
                 response.statusCode = 201;
-                response.append('location', 'http://' + request.headers.host + '/test-runs/' + testRunModel.id());
+                response.append('location', getURL(request, testRunModel));
                 response.end();
             }
             catch(exception) {
@@ -20,11 +23,13 @@ module.exports = function(testRunsModel, paPortalAPI, exceptionView) {
             response.end(testRun.toJSONString());
         },
         patch: function(request, response, id) {
-            var testRun = testRunsModel.getById(id);
-            testRun.applyPatch(request.body);
-            testRun.save();
-            response.statusCode = 204;
-            response.end();
+            var testRunModel = testRunsModel.getById(id);
+            testRunModel.applyPatch(request.body, getURL(request, testRunModel), completionCallback);
+            function completionCallback() {
+                testRunModel.save();
+                response.statusCode = 204;
+                response.end();
+            }
         }
     }
 }

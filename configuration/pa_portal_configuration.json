@@ -9,6 +9,7 @@
         "supportedEnvironment"
     ],
     "testRunsURL": "http://localhost:3000/test-runs",
+    "promotionsURLTemplate": "http://localhost:3000/deployments/:deploymentId/promotions",
     "exceptions": [
         {
             "name": "UnsupportedComponentException",
