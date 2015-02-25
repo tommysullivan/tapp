@@ -13,6 +13,7 @@ var DeploymentNotificationsController = require('./controllers/deployment_notifi
 var ExceptionView = require('./views/exception_view');
 var ExceptionsModel = require('./models/exceptions_model');
 var collections = require('collections');
+var request = require('request');
 var fs = require('fs');
 
 module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage, expressApp) {
@@ -82,7 +83,7 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
             return new DeploymentNotificationsModel(deploymentNotificationsArray, this);
         },
         newDeploymentNotificationModel: function(deploymentNotificationModelJSON) {
-            return new DeploymentNotificationModel(deploymentNotificationModelJSON);
+            return new DeploymentNotificationModel(deploymentNotificationModelJSON, request, paPortalConfigurationJSON['testRunsURL']);
         }
     }
 }

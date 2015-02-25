@@ -8,6 +8,7 @@
     "supportedEnvironments": [
         "supportedEnvironment"
     ],
+    "testRunsURL": "http://localhost:3000/test-runs",
     "exceptions": [
         {
             "name": "UnsupportedComponentException",

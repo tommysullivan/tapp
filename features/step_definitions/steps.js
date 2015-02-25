@@ -61,6 +61,7 @@ module.exports = function() {
         this.expect(responseJSONHash.id).not.to.be.null;
         expectedJSONString = expectedJSONString.replace("{{generatedId}}", responseJSONHash.id);
         expectedJSONString = expectedJSONString.replace("{{preExistingId}}", this.preExistingId);
+        expectedJSONString = expectedJSONString.replace("{{generatedTestRunHref}}", responseJSONHash.testRunHref);
         var jsonHash = JSON.parse(expectedJSONString);
         try {
             this.expect(jsonHash).to.deep.equal(responseJSONHash);
@@ -104,5 +105,12 @@ module.exports = function() {
     this.Given(/^that the pa_portal_configuration\.json does not list unsupportedEnvironment as a supported environment$/, function (callback) {
         callback();
     });
+
+    this.Given(/^I remember the URL in the response's "([^"]*)" property$/, function (propertyName, callback) {
+        var responseJSON = JSON.parse(this.recentResponseBody);
+        this.rememberedURL = responseJSON[propertyName];
+    });
+
+
 
 }

@@ -4,10 +4,12 @@ module.exports = function DeploymentVerificationsController(deploymentNotificati
             try {
                 var deploymentVerificationModel = deploymentNotificationsModel.addNewDeploymentNotificationViaJSON(request.body);
                 deploymentVerificationModel.save();
-                deploymentVerificationModel.processNotification();
-                response.statusCode = 201;
-                response.append('location', 'http://' + request.headers.host + '/deployment-notifications/' + deploymentVerificationModel.id());
-                response.end();
+                deploymentVerificationModel.processNotification(processingCompleteCallback);
+                function processingCompleteCallback() {
+                    response.statusCode = 201;
+                    response.append('location', 'http://' + request.headers.host + '/deployment-notifications/' + deploymentVerificationModel.id());
+                    response.end();
+                }
             }
             catch(exception) {
                 exceptionView.render(exception, response);
