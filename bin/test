@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
-#
-# EXAMPLE:
-#   ./bin/test # Runs all tests
-./node_modules/mocha/bin/mocha  test/**/*.js
-./node_modules/cucumber/bin/cucumber.js
+./bin/www > www_under_test.log &
+WWW_PID=$!
+./node_modules/cucumber/bin/cucumber.js --format pretty
+kill $WWW_PID
