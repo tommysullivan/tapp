@@ -3,3 +3,6 @@
 # node stuff
 *.log
 node_modules/*
+
+# ruby stuff to ignore
+.rvmrc

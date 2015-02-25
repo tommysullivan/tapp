@@ -1,6 +1,6 @@
 {
-  "name": "pa-portal",
-  "homepage": "https://confluence.corp.lookout.com/pages/viewpage.action?pageId=38245318",
+  "name": "tapp",
+  "homepage": "https://github.com/lookout/tapp",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "request": "latest",
     "nodemon": "latest"
   },
-  "repository": "https://source.flexilis.local/platform-automation/pa-portal",
+  "repository": "https://github.com/lookout/tapp",
   "dependencies": {
     "body-parser": "~1.10.2",
     "cookie-parser": "~1.3.3",
