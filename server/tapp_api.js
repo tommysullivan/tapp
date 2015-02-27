@@ -15,7 +15,7 @@ var collections = require('collections');
 var request = require('request');
 var fs = require('fs');
 
-module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage, expressApp) {
+module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp) {
     var nextSaveId = 0;
     var testRunModelsArray = []
     var deploymentNotificationsArray = []

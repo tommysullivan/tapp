@@ -14,10 +14,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //PA-Portal Specific Stuff
-var paPoralConfigurationJSON = JSON.parse(fs.readFileSync(__dirname + "/configuration/pa_portal_configuration.json"));
-var PAPortalAPI = require('./server/pa_portal_api');
-var paPortalAPI = new PAPortalAPI(paPoralConfigurationJSON, express, app);
-var applicationController = paPortalAPI.newApplicationController();
+var paPoralConfigurationJSON = JSON.parse(fs.readFileSync(__dirname + "/configuration/tapp_configuration.json"));
+var TappAPI = require('./server/tapp_api');
+var tappAPI = new TappAPI(paPoralConfigurationJSON, express, app);
+var applicationController = tappAPI.newApplicationController();
 applicationController.start();
 //End PA-Portal specific stuff
 

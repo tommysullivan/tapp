@@ -1,11 +1,11 @@
-module.exports = function(paPortalAPI) {
+module.exports = function(tappAPI) {
     return {
         start: function() {
             var routes = [
-                paPortalAPI.newTestRunsRoute(),
-                paPortalAPI.newDeploymentNotificationsRoutes(),
-                paPortalAPI.newExternalRoutes(),
-                paPortalAPI.newHeathCheckRoute()
+                tappAPI.newTestRunsRoute(),
+                tappAPI.newDeploymentNotificationsRoutes(),
+                tappAPI.newExternalRoutes(),
+                tappAPI.newHeathCheckRoute()
             ]
             routes.forEach(function(route) { route.setupRouter(); });
         }

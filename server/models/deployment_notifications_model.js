@@ -1,10 +1,10 @@
-module.exports = function DeploymentNotificationsModel(deploymentNotificationModelsArray, paPortalAPI, exceptionsModel) {
+module.exports = function DeploymentNotificationsModel(deploymentNotificationModelsArray, tappAPI, exceptionsModel) {
     function getById(id) {
         return deploymentNotificationModelsArray.filter(function(dN) { return dN.id()==id; })[0];
     }
     return {
         addNewDeploymentNotificationViaJSON: function(deploymentNotificationModelJSON) {
-            var deploymentVerificationModel = paPortalAPI.newDeploymentNotificationModel(deploymentNotificationModelJSON);
+            var deploymentVerificationModel = tappAPI.newDeploymentNotificationModel(deploymentNotificationModelJSON);
             if(this.hasNotificationWithId(deploymentVerificationModel.id())) throw exceptionsModel.new
             deploymentNotificationModelsArray.push(deploymentVerificationModel);
             return deploymentVerificationModel;

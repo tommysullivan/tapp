@@ -1,4 +1,4 @@
-module.exports = function(testRunsModel, paPortalAPI, exceptionView) {
+module.exports = function(testRunsModel, tappAPI, exceptionView) {
     function getURL(request, testRunModel) {
         return 'http://' + request.headers.host + '/test-runs/' + testRunModel.id();
     }

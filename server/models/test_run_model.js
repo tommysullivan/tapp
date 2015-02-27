@@ -6,7 +6,7 @@ module.exports = function(
     exceptionsModel,
     supportedEnvironments,
     request,
-    paPortalAPI
+    tappAPI
     ) {
     return {
         id: function() {
@@ -47,7 +47,7 @@ module.exports = function(
             if(testRunModelJSON.hasOwnProperty('triggeredBy')) {
                 request(testRunModelJSON.triggeredBy, onDeploymentNotificationGETRequestComplete.bind(this));
                 function onDeploymentNotificationGETRequestComplete(error, response, body) {
-                    var deploymentNotificationModel = paPortalAPI.newDeploymentNotificationModel(JSON.parse(body));
+                    var deploymentNotificationModel = tappAPI.newDeploymentNotificationModel(JSON.parse(body));
                     deploymentNotificationModel.promote(this, selfURL, completionCallback);
                 }
             } else completionCallback();
