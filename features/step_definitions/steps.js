@@ -1,5 +1,12 @@
 module.exports = function() {
 
+    function onRequestComplete(callback, error, response, body) {
+        if(error) callback.fail();
+        this.recentResponse = response;
+        this.recentResponseBody = body;
+        callback();
+    }
+
     this.When(/^I POST the following JSON to the "([^"]*)" resource:$/, function (resourceName, jsonString, callback) {
         var url = this.resources.urlForFriendlyName(resourceName);
         if(jsonString.indexOf("{{preExistingId}}")!=-1) {
@@ -13,13 +20,12 @@ module.exports = function() {
             json: true,
             body: jsonHashToPost
         }
-        this.request(url, requestOptions, onRequestComplete.bind(this));
-        function onRequestComplete(error, response, body) {
-            if(error) callback.fail();
-            this.recentResponse = response;
-            this.recentResponseBody = body;
-            callback();
-        }
+        this.request(url, requestOptions, onRequestComplete.bind(this, callback));
+    });
+
+    this.When(/^I GET the "([^"]*)" resource$/, function (resourceName, callback) {
+        var url = this.resources.urlForFriendlyName(resourceName);
+        this.request(url, onRequestComplete.bind(this, callback));
     });
 
     this.Then(/^I receive a(n)? "([^"]*)" response$/, function (aOrAn, responseStatusName, callback) {
@@ -36,13 +42,7 @@ module.exports = function() {
     });
 
     this.When(/^I call the remembered "([^"]*)"$/, function (rememberedItemName, callback) {
-        this.request(this.rememberedItems[rememberedItemName], onRequestComplete.bind(this));
-        function onRequestComplete(error, response, body) {
-            if(error) callback.fail(error);
-            this.recentResponse = response;
-            this.recentResponseBody = body;
-            callback();
-        }
+        this.request(this.rememberedItems[rememberedItemName], onRequestComplete.bind(this, callback));
     });
 
     this.Given(/^the Content\-Type of the representation is "([^"]*)"$/, function (expectedContentType, callback) {
@@ -108,11 +108,7 @@ module.exports = function() {
             json: true,
             body: jsonHashToPatch
         }
-        this.request(url, requestOptions, onRequestComplete.bind(this));
-        function onRequestComplete(error, response, body) {
-            if(error) callback.fail();
-            callback();
-        }
+        this.request(url, requestOptions, onRequestComplete.bind(this, callback));
     });
 
     this.Given(/^I remember the location header as "([^"]*)" for later use$/, function (rememberedItemName, callback) {
