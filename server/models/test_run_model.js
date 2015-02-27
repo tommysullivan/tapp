@@ -6,8 +6,7 @@ module.exports = function(
     exceptionsModel,
     supportedEnvironments,
     request,
-    paPortalAPI,
-    promotionsURLTemplate
+    paPortalAPI
     ) {
     return {
         id: function() {
@@ -24,6 +23,9 @@ module.exports = function(
         environment: function() {
             return testRunModelJSON.environment;
         },
+        promotionHref: function(newValue) {
+            testRunModelJSON.promotionHref = newValue;
+        },
         hasUnsupportedComponents: function() {
             function isUnsupported(componentName) { return !supportedComponents.contains(componentName); }
             return this.components().any(isUnsupported);
@@ -37,7 +39,6 @@ module.exports = function(
         executeTestRun: function() {
             if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentException();
             if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentException();
-
             testRunModelJSON.status = 'in progress';
         },
         applyPatch: function(patchJSON, selfURL, completionCallback) {
@@ -47,27 +48,7 @@ module.exports = function(
                 request(testRunModelJSON.triggeredBy, onDeploymentNotificationGETRequestComplete.bind(this));
                 function onDeploymentNotificationGETRequestComplete(error, response, body) {
                     var deploymentNotificationModel = paPortalAPI.newDeploymentNotificationModel(JSON.parse(body));
-                    var promotionsURL = promotionsURLTemplate.replace(':deploymentId', deploymentNotificationModel.id());
-                    var requestOptions = {
-                        method: 'POST',
-                        json: true,
-                        body: {
-                            "name": deploymentNotificationModel.service(),
-                            "url" : selfURL,
-                            "status" : this.status()
-                        }
-                    }
-                    request(promotionsURL, requestOptions, onPromotionPOSTRequestComplete);
-                }
-                function onPromotionPOSTRequestComplete(error, response, body) {
-                    if(error) {
-                        console.log("PROMOTION POST FAILED");
-                        throw new Error("An error occurred promotion");
-                    }
-                    else {
-                        testRunModelJSON.promotionHref = response.headers.location;
-                        completionCallback();
-                    }
+                    deploymentNotificationModel.promote(this, selfURL, completionCallback);
                 }
             } else completionCallback();
         },

@@ -1,17 +1,13 @@
 var ApplicationController = require('./controllers/application_controller');
-
 var ExternalRoutes = require('./routes/external_routes');
-
 var TestRunsRoute = require('./routes/test_runs_route');
 var TestRunsModel = require('./models/test_runs_model');
 var TestRunModel = require('./models/test_run_model');
 var TestRunsController = require('./controllers/test_runs_controller');
-
 var DeploymentNotificationsRoutes = require('./routes/deployment_notifications_routes');
 var DeploymentNotificationsModel = require('./models/deployment_notifications_model');
 var DeploymentNotificationModel = require('./models/deployment_notification_model');
 var DeploymentNotificationsController = require('./controllers/deployment_notifications_controller');
-
 var ExceptionView = require('./views/exception_view');
 var ExceptionsModel = require('./models/exceptions_model');
 var collections = require('collections');
@@ -77,14 +73,17 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
                 this.newExceptionsModel(),
                 this.newSupportedEnvironments(),
                 request,
-                this,
-                paPortalConfigurationJSON['promotionsURLTemplate']
+                this
             );
         },
 
         //DEPLOYMENT NOTIFICATIONS
         newDeploymentNotificationsRoutes: function() {
-            return new DeploymentNotificationsRoutes(expressApp, this.newExpressRouter(), this.newDeploymentNotificationsController());
+            return new DeploymentNotificationsRoutes(
+                expressApp,
+                this.newExpressRouter(),
+                this.newDeploymentNotificationsController()
+            );
         },
         newDeploymentNotificationsController: function() {
             return new DeploymentNotificationsController(this.newDeploymentNotificationsModel(), this.newExceptionView());
@@ -93,7 +92,12 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
             return new DeploymentNotificationsModel(deploymentNotificationsArray, this);
         },
         newDeploymentNotificationModel: function(deploymentNotificationModelJSON) {
-            return new DeploymentNotificationModel(deploymentNotificationModelJSON, request, paPortalConfigurationJSON['testRunsURL']);
+            return new DeploymentNotificationModel(
+                deploymentNotificationModelJSON,
+                request,
+                paPortalConfigurationJSON['testRunsURL'],
+                paPortalConfigurationJSON['promotionsURLTemplate']
+            );
         }
     }
 }

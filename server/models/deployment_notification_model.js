@@ -1,4 +1,4 @@
-module.exports = function DeploymentNotificationModel(deploymentNotificationModelJSON, request, testRunsURL) {
+module.exports = function DeploymentNotificationModel(deploymentNotificationModelJSON, request, testRunsURL, promotionsURLTemplate) {
     return {
         id: function() {
             return deploymentNotificationModelJSON.id;
@@ -25,6 +25,29 @@ module.exports = function DeploymentNotificationModel(deploymentNotificationMode
             function onRequestComplete(error, response, body) {
                 deploymentNotificationModelJSON.testRunHref = response.headers.location;
                 processingCompleteCallback();
+            }
+        },
+        promote: function(testRunModel, testRunURL, completionCallback) {
+            var promotionsURL = promotionsURLTemplate.replace(':deploymentId', this.id());
+            var requestOptions = {
+                method: 'POST',
+                json: true,
+                body: {
+                    "name": this.service(),
+                    "url" : testRunURL,
+                    "status" : testRunModel.status()
+                }
+            }
+            request(promotionsURL, requestOptions, onPromotionPOSTRequestComplete);
+            function onPromotionPOSTRequestComplete(error, response, body) {
+                if(error) {
+                    console.log("PROMOTION POST FAILED");
+                    throw new Error("An error occurred promotion");
+                }
+                else {
+                    testRunModel.promotionHref(response.headers.location);
+                    completionCallback();
+                }
             }
         },
         toJSONString: function() {
