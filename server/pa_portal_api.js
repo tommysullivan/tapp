@@ -1,5 +1,6 @@
 var ApplicationController = require('./controllers/application_controller');
 var ExternalRoutes = require('./routes/external_routes');
+var HealthCheckRoute = require('./routes/healthcheck_route');
 var TestRunsRoute = require('./routes/test_runs_route');
 var TestRunsModel = require('./models/test_runs_model');
 var TestRunModel = require('./models/test_run_model');
@@ -51,6 +52,10 @@ module.exports = function PAPortalAPI(paPortalConfigurationJSON, expressPackage,
         //EXTERNAL ROUTES
         newExternalRoutes: function() {
             return new ExternalRoutes(expressApp, this.newExpressRouter());
+        },
+
+        newHeathCheckRoute: function() {
+            return new HealthCheckRoute(expressApp, this.newExpressRouter());
         },
 
         //TEST RUNS

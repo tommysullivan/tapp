@@ -4,7 +4,8 @@ module.exports = function(paPortalAPI) {
             var routes = [
                 paPortalAPI.newTestRunsRoute(),
                 paPortalAPI.newDeploymentNotificationsRoutes(),
-                paPortalAPI.newExternalRoutes()
+                paPortalAPI.newExternalRoutes(),
+                paPortalAPI.newHeathCheckRoute()
             ]
             routes.forEach(function(route) { route.setupRouter(); });
         }
