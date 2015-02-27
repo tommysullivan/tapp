@@ -18,7 +18,7 @@ var fs = require('fs');
 module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp) {
     var nextSaveId = 0;
     var testRunModelsArray = []
-    var deploymentNotificationModelsArray = []
+    var deploymentNotificationModelsCollection = collections.Collection([]);
     return {
         //CONFIG
         newSupportedComponents: function() {
@@ -63,7 +63,7 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new TestRunsRoute(expressApp, this.newExpressRouter(), this.newTestRunsController());
         },
         newTestRunsModel: function() {
-            return new TestRunsModel(testRunModelsArray, this);
+            return new TestRunsModel(testRunModelsArray);
         },
         newTestRunsController: function() {
             return new TestRunsController(this.newTestRunsModel(), this, this.newExceptionView());
@@ -78,7 +78,8 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 this.newExceptionsModel(),
                 this.newSupportedEnvironments(),
                 request,
-                this
+                this,
+                testRunModelsArray
             );
         },
 
@@ -94,7 +95,7 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new DeploymentNotificationsController(this.newDeploymentNotificationsModel(), this.newExceptionView(), this);
         },
         newDeploymentNotificationsModel: function() {
-            return new DeploymentNotificationsModel(deploymentNotificationModelsArray);
+            return new DeploymentNotificationsModel(deploymentNotificationModelsCollection);
         },
         newDeploymentNotificationModel: function(deploymentNotificationModelJSON) {
             return new DeploymentNotificationModel(
@@ -104,7 +105,7 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 paPortalConfigurationJSON['promotionsURLTemplate'],
                 this.newDeploymentNotificationsModel(),
                 this.newExceptionsModel(),
-                deploymentNotificationModelsArray
+                deploymentNotificationModelsCollection
             );
         }
     }

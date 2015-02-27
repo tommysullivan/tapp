@@ -1,15 +1,13 @@
-module.exports = function DeploymentNotificationsModel(deploymentNotificationModelsArray) {
-    function getById(id) {
-        return deploymentNotificationModelsArray.filter(function(dN) { return dN.id()==id; })[0];
+module.exports = function DeploymentNotificationsModel(deploymentNotificationModelsCollection) {
+    function notificationsWithId(id) {
+        return deploymentNotificationModelsCollection.filter(function(dN) { return dN.id()==id; });
     }
     return {
         hasNotificationWithId: function(id) {
-            return getById(id)!=null;
+            return notificationsWithId(id).length()>0;
         },
         getById: function(id) {
-            var matchingDeploymentNotification = getById(id);
-            if(matchingDeploymentNotification==null) throw new Error("could not find deployment notification with id "+id);
-            return matchingDeploymentNotification;
+            return notificationsWithId(id).first();
         }
     }
 }

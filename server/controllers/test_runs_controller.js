@@ -5,7 +5,7 @@ module.exports = function(testRunsModel, tappAPI, exceptionView) {
     return {
         create: function(request, response) {
             try {
-                var testRunModel = testRunsModel.addNewTestRunViaJSON(request.body);
+                var testRunModel = tappAPI.newTestRunModel(request.body);
                 testRunModel.save();
                 testRunModel.executeTestRun();
                 response.statusCode = 201;

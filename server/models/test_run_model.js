@@ -6,7 +6,8 @@ module.exports = function(
     exceptionsModel,
     supportedEnvironments,
     request,
-    tappAPI
+    tappAPI,
+    testRunModelsArray
     ) {
     return {
         id: function() {
@@ -15,6 +16,7 @@ module.exports = function(
         save: function() {
             if(!testRunModelJSON.hasOwnProperty('id')) {
                 testRunModelJSON.id = idUponSave;
+                testRunModelsArray.push(this);
             }
         },
         components: function() {

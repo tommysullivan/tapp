@@ -5,15 +5,17 @@ module.exports = function DeploymentNotificationModel(
     promotionsURLTemplate,
     deploymentNotificationsModel,
     exceptionsModel,
-    deploymentNotificationModelsArray
+    deploymentNotificationModelsCollection
     ) {
     return {
         id: function() {
             return deploymentNotificationModelJSON.id;
         },
         save: function() {
-            if(deploymentNotificationsModel.hasNotificationWithId(this.id())) throw exceptionsModel.newDuplicateIdException(this.id());
-            deploymentNotificationModelsArray.push(this);
+            if(!deploymentNotificationModelsCollection.contains(this)) {
+                if(deploymentNotificationsModel.hasNotificationWithId(this.id())) throw exceptionsModel.newDuplicateIdException(this.id());
+                deploymentNotificationModelsCollection.add(this);
+            }
         },
         service: function() {
             return deploymentNotificationModelJSON.service;
