@@ -18,6 +18,7 @@
     "testRunsContentType": "application/vnd.lookout.pa.test-run+json;version=1.0.0",
     "jenkinsCSRFCrumbURL": "https://ci.flexilis.local/crumbIssuer/api/json",
     "baseURL": "http://localhost:3000",
+    "promotionsBaseURL": "http://localhost:3000",
     "testRunsPath": "/test-runs/",
     "testRunPath": "/test-runs/:id",
     "healthCheckPath": "/health",

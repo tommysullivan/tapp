@@ -54,7 +54,7 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new ExternalRoutes(
                 expressApp,
                 this.newExpressRouter(),
-                paPortalConfigurationJSON['baseURL'],
+                paPortalConfigurationJSON['promotionsBaseURL'],
                 paPortalConfigurationJSON['promotionsPath'],
                 paPortalConfigurationJSON['promotionPath'],
                 paPortalConfigurationJSON['promotionContentType'],
