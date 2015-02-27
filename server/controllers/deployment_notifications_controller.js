@@ -1,8 +1,8 @@
-module.exports = function DeploymentVerificationsController(deploymentNotificationsModel, exceptionView) {
+module.exports = function DeploymentVerificationsController(deploymentNotificationsModel, exceptionView, tappAPI) {
     return {
         create: function(request, response) {
             try {
-                var deploymentVerificationModel = deploymentNotificationsModel.addNewDeploymentNotificationViaJSON(request.body);
+                var deploymentVerificationModel = tappAPI.newDeploymentNotificationModel(request.body);
                 deploymentVerificationModel.save();
                 var selfURL = 'http://' + request.headers.host + '/deployment-notifications/' + deploymentVerificationModel.id();
                 deploymentVerificationModel.processNotification(processingCompleteCallback, selfURL);

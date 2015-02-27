@@ -1,9 +1,19 @@
-module.exports = function DeploymentNotificationModel(deploymentNotificationModelJSON, request, testRunsURL, promotionsURLTemplate) {
+module.exports = function DeploymentNotificationModel(
+    deploymentNotificationModelJSON,
+    request,
+    testRunsURL,
+    promotionsURLTemplate,
+    deploymentNotificationsModel,
+    exceptionsModel,
+    deploymentNotificationModelsArray
+    ) {
     return {
         id: function() {
             return deploymentNotificationModelJSON.id;
         },
         save: function() {
+            if(deploymentNotificationsModel.hasNotificationWithId(this.id())) throw exceptionsModel.newDuplicateIdException(this.id());
+            deploymentNotificationModelsArray.push(this);
         },
         service: function() {
             return deploymentNotificationModelJSON.service;

@@ -18,7 +18,7 @@ var fs = require('fs');
 module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp) {
     var nextSaveId = 0;
     var testRunModelsArray = []
-    var deploymentNotificationsArray = []
+    var deploymentNotificationModelsArray = []
     return {
         //CONFIG
         newSupportedComponents: function() {
@@ -91,17 +91,20 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             );
         },
         newDeploymentNotificationsController: function() {
-            return new DeploymentNotificationsController(this.newDeploymentNotificationsModel(), this.newExceptionView());
+            return new DeploymentNotificationsController(this.newDeploymentNotificationsModel(), this.newExceptionView(), this);
         },
         newDeploymentNotificationsModel: function() {
-            return new DeploymentNotificationsModel(deploymentNotificationsArray, this);
+            return new DeploymentNotificationsModel(deploymentNotificationModelsArray);
         },
         newDeploymentNotificationModel: function(deploymentNotificationModelJSON) {
             return new DeploymentNotificationModel(
                 deploymentNotificationModelJSON,
                 request,
                 paPortalConfigurationJSON['testRunsURL'],
-                paPortalConfigurationJSON['promotionsURLTemplate']
+                paPortalConfigurationJSON['promotionsURLTemplate'],
+                this.newDeploymentNotificationsModel(),
+                this.newExceptionsModel(),
+                deploymentNotificationModelsArray
             );
         }
     }
