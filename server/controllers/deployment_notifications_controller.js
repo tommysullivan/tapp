@@ -1,11 +1,11 @@
-module.exports = function DeploymentVerificationsController(deploymentNotificationsModel, exceptionView, tappAPI) {
+module.exports = function(deploymentNotificationsModel, exceptionView, tappAPI, contentType, deploymentNotificationsRoutes) {
     return {
         create: function(request, response) {
             try {
-                var deploymentVerificationModel = tappAPI.newDeploymentNotificationModel(request.body);
-                deploymentVerificationModel.save();
-                var selfURL = 'http://' + request.headers.host + '/deployment-notifications/' + deploymentVerificationModel.id();
-                deploymentVerificationModel.processNotification(processingCompleteCallback, selfURL);
+                var deploymentNotificationModel = tappAPI.newDeploymentNotificationModel(request.body);
+                deploymentNotificationModel.save();
+                var selfURL = deploymentNotificationsRoutes.deploymentURL(deploymentNotificationModel.id());
+                deploymentNotificationModel.processNotification(processingCompleteCallback, selfURL);
                 function processingCompleteCallback() {
                     response.statusCode = 201;
                     response.append('location', selfURL);
@@ -18,7 +18,7 @@ module.exports = function DeploymentVerificationsController(deploymentNotificati
         },
         get: function(request, response, id) {
             var deploymentVerificationModel = deploymentNotificationsModel.getById(id);
-            response.append('Content-Type', 'application/vnd.lookout.deploydb.deployment-notification+json;version=1.0.0');
+            response.append('Content-Type', contentType);
             response.statusCode = 200;
             response.end(deploymentVerificationModel.toJSONString());
         }

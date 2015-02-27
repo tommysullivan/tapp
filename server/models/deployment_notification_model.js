@@ -1,8 +1,8 @@
 module.exports = function DeploymentNotificationModel(
     deploymentNotificationModelJSON,
     request,
-    testRunsURL,
-    promotionsURLTemplate,
+    testRunRoutes,
+    externalRoutes,
     deploymentNotificationsModel,
     exceptionsModel,
     deploymentNotificationModelsCollection
@@ -33,14 +33,13 @@ module.exports = function DeploymentNotificationModel(
                     "triggeredBy": selfURL
                 }
             }
-            request(testRunsURL, requestOptions, onRequestComplete.bind(this));
+            request(testRunRoutes.testRunsURL(), requestOptions, onRequestComplete.bind(this));
             function onRequestComplete(error, response, body) {
                 deploymentNotificationModelJSON.testRunHref = response.headers.location;
                 processingCompleteCallback();
             }
         },
         promote: function(testRunModel, testRunURL, completionCallback) {
-            var promotionsURL = promotionsURLTemplate.replace(':deploymentId', this.id());
             var requestOptions = {
                 method: 'POST',
                 json: true,
@@ -50,16 +49,10 @@ module.exports = function DeploymentNotificationModel(
                     "status" : testRunModel.status()
                 }
             }
-            request(promotionsURL, requestOptions, onPromotionPOSTRequestComplete);
+            request(externalRoutes.promotionsURL(this.id()), requestOptions, onPromotionPOSTRequestComplete);
             function onPromotionPOSTRequestComplete(error, response, body) {
-                if(error) {
-                    console.log("PROMOTION POST FAILED");
-                    throw new Error("An error occurred promotion");
-                }
-                else {
-                    testRunModel.promotionHref(response.headers.location);
-                    completionCallback();
-                }
+                testRunModel.promotionHref(response.headers.location);
+                completionCallback();
             }
         },
         toJSONString: function() {

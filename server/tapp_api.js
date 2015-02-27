@@ -1,7 +1,7 @@
 var ApplicationController = require('./controllers/application_controller');
 var ExternalRoutes = require('./routes/external_routes');
 var HealthCheckRoute = require('./routes/healthcheck_route');
-var TestRunsRoute = require('./routes/test_runs_route');
+var TestRunRoutes = require('./routes/test_run_routes');
 var TestRunsModel = require('./models/test_runs_model');
 var TestRunModel = require('./models/test_run_model');
 var TestRunsController = require('./controllers/test_runs_controller');
@@ -51,22 +51,49 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
 
         //EXTERNAL ROUTES
         newExternalRoutes: function() {
-            return new ExternalRoutes(expressApp, this.newExpressRouter());
+            return new ExternalRoutes(
+                expressApp,
+                this.newExpressRouter(),
+                paPortalConfigurationJSON['baseURL'],
+                paPortalConfigurationJSON['promotionsPath'],
+                paPortalConfigurationJSON['promotionPath'],
+                paPortalConfigurationJSON['promotionContentType'],
+                paPortalConfigurationJSON['mountPoint']
+            );
         },
 
         newHeathCheckRoute: function() {
-            return new HealthCheckRoute(expressApp, this.newExpressRouter());
+            return new HealthCheckRoute(
+                expressApp,
+                this.newExpressRouter(),
+                paPortalConfigurationJSON['healthCheckPath'],
+                paPortalConfigurationJSON['mountPoint']
+            );
         },
 
         //TEST RUNS
-        newTestRunsRoute: function() {
-            return new TestRunsRoute(expressApp, this.newExpressRouter(), this.newTestRunsController());
+        newTestRunRoutes: function() {
+            return new TestRunRoutes(
+                expressApp,
+                this.newExpressRouter(),
+                this,
+                paPortalConfigurationJSON['baseURL'],
+                paPortalConfigurationJSON['testRunsPath'],
+                paPortalConfigurationJSON['testRunPath'],
+                paPortalConfigurationJSON['mountPoint']
+            );
         },
         newTestRunsModel: function() {
             return new TestRunsModel(testRunModelsArray);
         },
         newTestRunsController: function() {
-            return new TestRunsController(this.newTestRunsModel(), this, this.newExceptionView());
+            return new TestRunsController(
+                this.newTestRunsModel(),
+                this,
+                this.newExceptionView(),
+                paPortalConfigurationJSON['testRunsContentType'],
+                this.newTestRunRoutes()
+            );
         },
         newTestRunModel: function(testRunModelJSON) {
             nextSaveId++;
@@ -88,11 +115,21 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new DeploymentNotificationsRoutes(
                 expressApp,
                 this.newExpressRouter(),
-                this.newDeploymentNotificationsController()
+                this,
+                paPortalConfigurationJSON['baseURL'],
+                paPortalConfigurationJSON['deploymentNotificationsPath'],
+                paPortalConfigurationJSON['deploymentNotificationPath'],
+                paPortalConfigurationJSON['mountPoint']
             );
         },
         newDeploymentNotificationsController: function() {
-            return new DeploymentNotificationsController(this.newDeploymentNotificationsModel(), this.newExceptionView(), this);
+            return new DeploymentNotificationsController(
+                this.newDeploymentNotificationsModel(),
+                this.newExceptionView(),
+                this,
+                paPortalConfigurationJSON['deploymentNotificationContentType'],
+                this.newDeploymentNotificationsRoutes()
+            );
         },
         newDeploymentNotificationsModel: function() {
             return new DeploymentNotificationsModel(deploymentNotificationModelsCollection);
@@ -101,8 +138,8 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new DeploymentNotificationModel(
                 deploymentNotificationModelJSON,
                 request,
-                paPortalConfigurationJSON['testRunsURL'],
-                paPortalConfigurationJSON['promotionsURLTemplate'],
+                this.newTestRunRoutes(),
+                this.newExternalRoutes(),
                 this.newDeploymentNotificationsModel(),
                 this.newExceptionsModel(),
                 deploymentNotificationModelsCollection

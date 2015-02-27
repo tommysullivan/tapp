@@ -2,7 +2,7 @@ module.exports = function(tappAPI) {
     return {
         start: function() {
             var routes = [
-                tappAPI.newTestRunsRoute(),
+                tappAPI.newTestRunRoutes(),
                 tappAPI.newDeploymentNotificationsRoutes(),
                 tappAPI.newExternalRoutes(),
                 tappAPI.newHeathCheckRoute()
