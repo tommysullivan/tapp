@@ -1,6 +1,0 @@
-{
-  "content-type": "application/vnd.lookout.pa.cucumber-integration-test+json;v=1.0.0",
-  "name": "DWA Integration Tests",
-  "repository": "https://github.mydomain.com/platform-automation/pa-integration-tests-for-dwa",
-  "configuration": "that can be used by a general jenkins job might appear here"
-}

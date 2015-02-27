@@ -1,6 +1,0 @@
-{
-  "content-type": "application/vnd.artifactory.artifact+json;v=1.0.0",
-  "buildJob": "https://jenkins/jobs/borderpatrolbuild/44232",
-  "artifact": "borderPatrol-1.0.23213.war",
-  "commit": "https://github.lookout.com/commitpath"
-}
