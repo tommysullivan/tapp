@@ -43,7 +43,7 @@ Feature: deployment-notifications
       "service" : "passingComponent1",
       "environment" : "supportedEnvironment",
       "status" : "COMPLETED",
-      "testRunHref": "{{generatedTestRunHref}}"
+      "testRunHref": "{{valid url}}"
     }
   """
 
@@ -54,11 +54,11 @@ Feature: deployment-notifications
     And the response contains the following JSON:
     """
     {
-      "id": {{generatedId}},
+      "id": {{valid number}},
       "components": ["passingComponent1"],
       "environment": "supportedEnvironment",
       "status": "in progress",
-      "triggeredBy": "{{rememberedNotificationURL}}"
+      "triggeredBy": "{{valid url}}"
     }
   """
 
@@ -76,12 +76,12 @@ Feature: deployment-notifications
     And the response contains the following JSON:
     """
     {
-      "id": {{generatedId}},
+      "id": {{valid number}},
       "components": ["passingComponent1"],
       "environment": "supportedEnvironment",
       "status": "<expected status value>",
-      "triggeredBy": "{{rememberedNotificationURL}}",
-      "promotionHref": "{{generatedPromotionHref}}",
+      "triggeredBy": "{{notification url}}",
+      "promotionHref": "{{valid url}}",
       "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
     }
     """
@@ -94,7 +94,7 @@ Feature: deployment-notifications
     """
     {
         "name": "passingComponent1",
-        "url" : "{{rememberedTestRunURL}}",
+        "url" : "{{valid url}}",
         "status" : "<expected status value>"
     }
     """

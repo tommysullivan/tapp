@@ -8,6 +8,13 @@
     "supportedEnvironments": [
         "supportedEnvironment"
     ],
+    "jenkinsJobs": [
+        {
+            "name": "bluffdaleSmokeTest",
+            "url": "https://ci.flexilis.local/job/bluffdale-smoketest/buildWithParameters?.crumb={{crumb}}&cause={{cause}}&STAGE_NAME={{environment}}&token=gf2087g837huefh29c8323928fhc32983rdh29chf4uhcbffhcbf9shglg43uhfjbvwf29fuh239fuhvhieufhf9s8ydfsidfjh"
+        }
+    ],
+    "jenkinsCSRFCrumbURL": "https://ci.flexilis.local/crumbIssuer/api/json",
     "testRunsURL": "http://localhost:3000/test-runs",
     "promotionsURLTemplate": "http://localhost:3000/deployments/:deploymentId/promotions",
     "exceptions": [

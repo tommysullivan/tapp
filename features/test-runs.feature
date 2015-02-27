@@ -21,7 +21,7 @@ Feature: test-runs
     And the response contains the following JSON:
     """
     {
-      "id": {{generatedId}},
+      "id": {{valid number}},
       "components": <componentsJSONArray>,
       "environment": "supportedEnvironment",
       "status": "in progress"
@@ -42,7 +42,7 @@ Feature: test-runs
     And the response contains the following JSON:
     """
     {
-      "id": {{generatedId}},
+      "id": {{valid number}},
       "components": <componentsJSONArray>,
       "environment": "supportedEnvironment",
       "status": "<expected status value>",

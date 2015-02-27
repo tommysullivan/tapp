@@ -37,6 +37,7 @@ module.exports = function(
         executeTestRun: function() {
             if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentException();
             if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentException();
+
             testRunModelJSON.status = 'in progress';
         },
         applyPatch: function(patchJSON, selfURL, completionCallback) {

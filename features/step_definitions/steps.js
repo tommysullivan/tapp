@@ -52,19 +52,42 @@ module.exports = function() {
 
     this.Then(/^the response contains the following JSON:$/, function (expectedJSONString, callback) {
         if(this.rememberedItems==null) this.rememberedItems={}
+        var validNumberPlaceholder = 8273468273;
+        var validURLPlaceholder = "http://validURLHere";
         var responseJSONHash = JSON.parse(this.recentResponseBody);
-        this.expect(responseJSONHash.id).not.to.be.null;
-        expectedJSONString = expectedJSONString.replace("{{generatedId}}", responseJSONHash.id);
-        expectedJSONString = expectedJSONString.replace("{{generatedPromotionHref}}", responseJSONHash.promotionHref);
+
+        expectedJSONString = expectedJSONString.replace("{{valid number}}", validNumberPlaceholder.toString());
+        expectedJSONString = expectedJSONString.replace("{{valid url}}", validURLPlaceholder);
         expectedJSONString = expectedJSONString.replace("{{preExistingId}}", this.preExistingId);
-        expectedJSONString = expectedJSONString.replace("{{generatedTestRunHref}}", responseJSONHash.testRunHref);
-        expectedJSONString = expectedJSONString.replace("{{rememberedNotificationURL}}", this.rememberedItems['notification url']);
-        expectedJSONString = expectedJSONString.replace("{{rememberedTestRunURL}}", this.rememberedItems['test run URL']);
 
+        var tokens = expectedJSONString.match(/{{.*}}/);
+        if(tokens!=null) {
+            tokens.forEach(replaceTokenValue.bind(this));
+            function replaceTokenValue(token) {
+                var rememberedItemName = token.substr(2, token.length-4);
+                if(this.rememberedItems.hasOwnProperty(rememberedItemName)) {
+                    expectedJSONString = expectedJSONString.replace(token, this.rememberedItems[rememberedItemName]);
+                }
+            }
+        }
 
-        var jsonHash = JSON.parse(expectedJSONString);
+        var expectedJSONHash = JSON.parse(expectedJSONString);
+
+        for(var propertyName in expectedJSONHash) {
+            var expectedValue = expectedJSONHash[propertyName];
+            var actualValue = responseJSONHash[propertyName];
+            if(expectedValue==validNumberPlaceholder) {
+                this.expect(actualValue).to.be.numeric;
+                expectedJSONHash[propertyName] = actualValue;
+            }
+            else if(expectedValue==validURLPlaceholder) {
+                this.expect(actualValue).to.be.a.string;
+                expectedJSONHash[propertyName] = actualValue;
+            }
+        }
+
         try {
-            this.expect(jsonHash).to.deep.equal(responseJSONHash);
+            this.expect(expectedJSONHash).to.deep.equal(responseJSONHash);
         }
         catch(e) {
             var message = "expected deep equality.\n  expected: "+expectedJSONString+"\n  actual: "+this.recentResponseBody;
