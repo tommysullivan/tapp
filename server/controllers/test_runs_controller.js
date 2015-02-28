@@ -4,10 +4,12 @@ module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, te
             try {
                 var testRunModel = tappAPI.newTestRunModel(request.body);
                 testRunModel.save();
-                testRunModel.executeTestRun();
-                response.statusCode = 201;
-                response.append('location', testRunRoutes.testRunURL(testRunModel.id()));
-                response.end();
+                testRunModel.executeTestRun(onComplete);
+                function onComplete() {
+                    response.statusCode = 201;
+                    response.append('location', testRunRoutes.testRunURL(testRunModel.id()));
+                    response.end();
+                }
             }
             catch(exception) {
                 exceptionView.render(exception, response);

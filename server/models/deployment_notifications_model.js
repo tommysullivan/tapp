@@ -4,7 +4,7 @@ module.exports = function DeploymentNotificationsModel(deploymentNotificationMod
     }
     return {
         hasNotificationWithId: function(id) {
-            return notificationsWithId(id).length()>0;
+            return !notificationsWithId(id).isEmpty();
         },
         getById: function(id) {
             return notificationsWithId(id).first();

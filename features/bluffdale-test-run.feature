@@ -7,11 +7,11 @@ Feature: bluffdale test run
     When I POST the following JSON to the "test-runs" resource:
     """
     {
-      "components": "bluffdale",
+      "component": "bluffdale",
       "environment": "<environment>"
     }
     """
-#    Then I receive a "CREATED" response
+    Then I receive a "CREATED" response
 #    And a URL is returned in the location header
 #
 #    Given I remember the location header as "test run URL" for later use
@@ -22,7 +22,7 @@ Feature: bluffdale test run
 #    """
 #    {
 #      "id": {{valid number}},
-#      "components": "bluffdale",
+#      "components": ["bluffdale"],
 #      "environment": "<environment>",
 #      "jenkinsJobHref": "{{valid url}}",
 #      "status": "in progress"

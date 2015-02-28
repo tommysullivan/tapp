@@ -1,3 +1,7 @@
+var collections = require('collections');
+var request = require('request');
+var fs = require('fs');
+
 var ApplicationController = require('./controllers/application_controller');
 var ExternalRoutes = require('./routes/external_routes');
 var HealthCheckRoute = require('./routes/healthcheck_route');
@@ -11,19 +15,16 @@ var DeploymentNotificationModel = require('./models/deployment_notification_mode
 var DeploymentNotificationsController = require('./controllers/deployment_notifications_controller');
 var ExceptionView = require('./views/exception_view');
 var ExceptionsModel = require('./models/exceptions_model');
-var collections = require('collections');
-var request = require('request');
-var fs = require('fs');
+var ComponentModel = require('./models/component_model');
+var ComponentsModel = require('./models/components_model');
+var DoNothingTestJob = require('./models/do_nothing_test_job');
+var JenkinsTestJob = require('./models/jenkins_test_job');
 
 module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp) {
     var nextSaveId = 0;
     var testRunModelsArray = []
     var deploymentNotificationModelsCollection = collections.Collection([]);
     return {
-        //CONFIG
-        newSupportedComponents: function() {
-            return collections.Collection(paPortalConfigurationJSON['supportedComponents']);
-        },
         newSupportedEnvironments: function() {
             return collections.Collection(paPortalConfigurationJSON['supportedEnvironments']);
         },
@@ -47,6 +48,34 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
         },
         newExceptionsModel: function() {
             return new ExceptionsModel(this.newExceptionConfigCollection());
+        },
+
+        newComponentsModel: function() {
+            return new ComponentsModel(
+                paPortalConfigurationJSON['components'],
+                this,
+                this.newExceptionsModel()
+            );
+        },
+        newComponentModel: function(componentJSON) {
+            return new ComponentModel(componentJSON, this);
+        },
+        newTestJob: function(testJSON) {
+            switch(testJSON.type) {
+                case "jenkins": return this.newJenkinsTestJob(testJSON);
+                case "doNothing": return this.newDoNothingTestJob();
+                default: throw new Error("Unknown test type: "+testJSON.type);
+            }
+        },
+        newJenkinsTestJob: function(testJSON) {
+            return new JenkinsTestJob(
+                request,
+                paPortalConfigurationJSON['jenkinsCSRFCrumbURL'],
+                testJSON
+            );
+        },
+        newDoNothingTestJob: function() {
+            return new DoNothingTestJob();
         },
 
         //EXTERNAL ROUTES
@@ -101,12 +130,12 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 testRunModelJSON,
                 nextSaveId,
                 collections,
-                this.newSupportedComponents(),
                 this.newExceptionsModel(),
                 this.newSupportedEnvironments(),
                 request,
                 this,
-                testRunModelsArray
+                testRunModelsArray,
+                this.newComponentsModel()
             );
         },
 

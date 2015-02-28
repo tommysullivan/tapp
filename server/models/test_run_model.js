@@ -2,12 +2,12 @@ module.exports = function(
     testRunModelJSON,
     idUponSave,
     collections,
-    supportedComponents,
     exceptionsModel,
     supportedEnvironments,
     request,
     tappAPI,
-    testRunModelsArray
+    testRunModelsArray,
+    componentsModel
     ) {
     return {
         id: function() {
@@ -19,8 +19,8 @@ module.exports = function(
                 testRunModelsArray.push(this);
             }
         },
-        components: function() {
-            return collections.Collection(testRunModelJSON.components);
+        component: function() {
+            return componentsModel.componentModelNamed(testRunModelJSON['component']);
         },
         environment: function() {
             return testRunModelJSON.environment;
@@ -28,20 +28,13 @@ module.exports = function(
         promotionHref: function(newValue) {
             testRunModelJSON.promotionHref = newValue;
         },
-        hasUnsupportedComponents: function() {
-            function isUnsupported(componentName) { return !supportedComponents.contains(componentName); }
-            return this.components().any(isUnsupported);
-        },
-        hasUnsupportedEnvironment: function() {
-            return !supportedEnvironments.contains(this.environment());
-        },
         status: function() {
             return testRunModelJSON.status;
         },
-        executeTestRun: function() {
-            if(this.hasUnsupportedComponents()) throw exceptionsModel.newUnsupportedComponentException();
-            if(this.hasUnsupportedEnvironment()) throw exceptionsModel.newUnsupportedEnvironmentException();
+        executeTestRun: function(callback) {
+            if(!supportedEnvironments.contains(this.environment())) throw exceptionsModel.newUnsupportedEnvironmentException();
             testRunModelJSON.status = 'in progress';
+            this.component().executeTestsAgainstEnvironment(this.environment(), callback);
         },
         applyPatch: function(patchJSON, selfURL, completionCallback) {
             if(patchJSON.hasOwnProperty('status')) testRunModelJSON.status = patchJSON.status;

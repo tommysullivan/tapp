@@ -16,7 +16,7 @@ Feature: deployment-notifications
         "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
         "createdAt" : "someTimestamp"
       },
-      "service" : "passingComponent1",
+      "service" : "passingComponent",
       "environment" : "supportedEnvironment",
       "status" : "COMPLETED"
     }
@@ -40,7 +40,7 @@ Feature: deployment-notifications
         "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
         "createdAt" : "someTimestamp"
       },
-      "service" : "passingComponent1",
+      "service" : "passingComponent",
       "environment" : "supportedEnvironment",
       "status" : "COMPLETED",
       "testRunHref": "{{valid url}}"
@@ -55,7 +55,7 @@ Feature: deployment-notifications
     """
     {
       "id": {{valid number}},
-      "components": ["passingComponent1"],
+      "component": "passingComponent",
       "environment": "supportedEnvironment",
       "status": "in progress",
       "triggeredBy": "{{valid url}}"
@@ -77,7 +77,7 @@ Feature: deployment-notifications
     """
     {
       "id": {{valid number}},
-      "components": ["passingComponent1"],
+      "component": "passingComponent",
       "environment": "supportedEnvironment",
       "status": "<expected status value>",
       "triggeredBy": "{{notification url}}",
@@ -93,7 +93,7 @@ Feature: deployment-notifications
     And the response contains the following JSON:
     """
     {
-        "name": "passingComponent1",
+        "name": "passingComponent",
         "url" : "{{valid url}}",
         "status" : "<expected status value>"
     }

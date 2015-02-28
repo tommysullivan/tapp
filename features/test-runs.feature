@@ -1,13 +1,13 @@
 Feature: test-runs
   As a human or program responsible for assuring quality
-  I want to request an integration test run for one or more components in a particular environment
+  I want to request an integration test run for one component in a particular environment
   So that the integration tests can verify the functionality and let me know the result
 
-  Scenario Outline: Request Test Run for supported component(s)
+  Scenario Outline: Request Test Run for supported component
     When I POST the following JSON to the "test-runs" resource:
     """
     {
-      "components": <componentsJSONArray>,
+      "component": "<componentName>",
       "environment": "supportedEnvironment"
     }
     """
@@ -22,7 +22,7 @@ Feature: test-runs
     """
     {
       "id": {{valid number}},
-      "components": <componentsJSONArray>,
+      "component": "<componentName>",
       "environment": "supportedEnvironment",
       "status": "in progress"
     }
@@ -43,38 +43,36 @@ Feature: test-runs
     """
     {
       "id": {{valid number}},
-      "components": <componentsJSONArray>,
+      "component": "<componentName>",
       "environment": "supportedEnvironment",
       "status": "<expected status value>",
       "testResultHref": "http://hrefToSomewhereContainingAnHTMLAndOrJSONTestResult"
     }
     """
   Examples:
-    | componentsJSONArray                        | expected status value |
-    | ["passingComponent1", "passingComponent2"] | passed                |
-    | ["passingComponent1", "failingComponent2"] | failed                |
-    | ["failingComponent1", "failingComponent2"] | failed                |
-    | ["failingComponent1", "passingComponent2"] | failed                |
+    | componentName     | expected status value |
+    | passingComponent  | passed                |
+    | failingComponent  | failed                |
 
-  Scenario: Request Test Run for unsupported component(s)
-    Given that the pa_portal_configuration.json does not list unsupported1 or unsupported2 as a supported component
+  Scenario: Request Test Run for unsupported component
+    Given that the pa_portal_configuration.json does not define unsupported1 component
     When I POST the following JSON to the "test-runs" resource:
     """
     {
-      "components": ["unsupportedComponent1", "unsupportedComponent2"],
+      "component": "unsupported1",
       "environment": "supportedEnvironment"
     }
     """
     Then I receive a "FORBIDDEN" response
     And the Content-Type of the representation is "application/vnd.lookout.pa.unsupported-component-exception+text; charset=utf-8"
-    And the body contains the message "The requested components are not supported by pa portal at this time"
+    And the body contains the message "The requested component is not supported by pa portal at this time"
 
-  Scenario: Request Test Run for unsupported environment(s)
+  Scenario: Request Test Run for unsupported environment
     Given that the pa_portal_configuration.json does not list unsupportedEnvironment as a supported environment
     When I POST the following JSON to the "test-runs" resource:
     """
     {
-      "components": ["passingComponent1", "passingComponent2"],
+      "component": "passingComponent",
       "environment": "unsupportedEnvironment"
     }
     """

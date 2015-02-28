@@ -28,7 +28,7 @@ module.exports = function DeploymentNotificationModel(
                 method: 'POST',
                 json: true,
                 body: {
-                    "components": [this.service()],
+                    "component": this.service(),
                     "environment": this.environment(),
                     "triggeredBy": selfURL
                 }

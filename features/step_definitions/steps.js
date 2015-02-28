@@ -123,7 +123,7 @@ module.exports = function() {
         callback();
     });
 
-    this.Given(/^that the pa_portal_configuration.json does not list unsupported1 or unsupported2 as a supported component$/, function(callback) {
+    this.Given(/^that the pa_portal_configuration\.json does not define unsupported1 component$/, function(callback) {
         callback();
     });
 
