@@ -138,4 +138,11 @@ module.exports = function() {
         callback();
     });
 
+    this.Then(/^the response is a JSON array$/, function (callback) {
+        var responseJSON = JSON.parse(this.recentResponseBody);
+        this.expect(responseJSON).to.be.an.array;
+        callback();
+    });
+
+
 }

@@ -1,4 +1,4 @@
-module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, testRunRoutes) {
+module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, testRunRoutes, listContentType) {
     return {
         create: function(request, response) {
             try {
@@ -29,6 +29,11 @@ module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, te
                 response.statusCode = 204;
                 response.end();
             }
+        },
+        list: function(request, response) {
+            response.append('Content-Type', listContentType);
+            response.statusCode = 200;
+            response.end(testRunsModel.toJSONString());
         }
     }
 }

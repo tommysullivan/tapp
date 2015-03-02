@@ -79,3 +79,9 @@ Feature: test-runs
     Then I receive a "FORBIDDEN" response
     And the Content-Type of the representation is "application/vnd.lookout.pa.unsupported-environment-exception+text; charset=utf-8"
     And the body contains the message "The requested environment is not supported by pa portal at this time"
+
+  Scenario: View list of test runs
+    When I GET the "test-runs" resource
+    Then I receive an "OK" response
+    And the Content-Type of the representation is "application/vnd.lookout.pa.test-runs-list+json;version=1.0.0"
+    And the response is a JSON array

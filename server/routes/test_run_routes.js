@@ -10,6 +10,9 @@ module.exports = function(expressApp, router, tappAPI, baseURL, testRunsPath, te
             router.patch(testRunPath, function(req, res) {
                 tappAPI.newTestRunsController().patch(req, res, req.param('id'));
             });
+            router.get(testRunsPath, function(req, res) {
+                tappAPI.newTestRunsController().list(req, res);
+            });
             expressApp.use(mountPoint, router);
         },
         testRunURL: function(id) {

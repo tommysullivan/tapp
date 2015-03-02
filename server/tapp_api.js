@@ -121,7 +121,8 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 this,
                 this.newExceptionView(),
                 paPortalConfigurationJSON['testRunsContentType'],
-                this.newTestRunRoutes()
+                this.newTestRunRoutes(),
+                paPortalConfigurationJSON['testRunsListContentType']
             );
         },
         newTestRunModel: function(testRunModelJSON) {

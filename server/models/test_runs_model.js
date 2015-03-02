@@ -4,6 +4,9 @@ module.exports = function(testRunModelsArray) {
             var matchingTestRun = testRunModelsArray.filter(function(tR) { return tR.id()==id; })[0];
             if(matchingTestRun==null) throw new Error("could not find test run with id "+id);
             return matchingTestRun;
+        },
+        toJSONString: function() {
+            return JSON.stringify(testRunModelsArray);
         }
     }
 }
