@@ -1,9 +1,8 @@
 module.exports = function(componentJSON, tappAPI) {
     return {
-        executeTestsAgainstEnvironment: function(environmentName, callback) {
+        executeTestsAgainstEnvironment: function(testRunURL, environmentName, callback) {
             var testJob = tappAPI.newTestJob(componentJSON.test);
-            console.log(testJob);
-            testJob.executeTestsAgainstEnvironment(environmentName, callback);
+            testJob.executeTestsAgainstEnvironment(testRunURL, environmentName, callback);
         }
     }
 }

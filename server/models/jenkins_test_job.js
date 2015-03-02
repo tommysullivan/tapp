@@ -1,7 +1,6 @@
 module.exports = function(request, jenkinsCSRFCrumbURL, testJSON) {
     return {
-        executeTestsAgainstEnvironment: function(environmentName, callback) {
-            console.log('jenkinsCSRFCrumbURL='+jenkinsCSRFCrumbURL);
+        executeTestsAgainstEnvironment: function(testRunURL, environmentName, callback) {
             var requestOptions = {
                 method: 'GET',
                 strictSSL: false
@@ -14,7 +13,11 @@ module.exports = function(request, jenkinsCSRFCrumbURL, testJSON) {
                     method: 'POST',
                     strictSSL: false
                 }
-                var url = testJSON['jenkinsJobURL'].replace('{{crumb}}', crumb).replace('{{cause}}', "pa+portal").replace('{{environment}}', environmentName);
+                var url = testJSON['jenkinsJobURL']
+                    .replace('{{crumb}}', crumb)
+                    .replace('{{cause}}', "pa+portal")
+                    .replace('{{tappTestRunURL}}', testRunURL)
+                    .replace('{{environment}}', environmentName);
                 request(url, requestOptions, onRequestComplete.bind(this));
                 function onRequestComplete(error, response, body) {
                     callback();

@@ -1,6 +1,6 @@
 module.exports = function() {
     return {
-        executeTestsAgainstEnvironment: function(environmentName, callback) {
+        executeTestsAgainstEnvironment: function(testRunURL, environmentName, callback) {
             callback();
         }
     }

@@ -6,7 +6,8 @@ module.exports = function(testRunModelsArray) {
             return matchingTestRun;
         },
         toJSONString: function() {
-            return JSON.stringify(testRunModelsArray);
+            var childJSONStrings = testRunModelsArray.map(function(testRunModel) { return testRunModel.toJSONString()});
+            return JSON.stringify(childJSONStrings.map(function(childJSON) { return JSON.parse(childJSON) }));
         }
     }
 }

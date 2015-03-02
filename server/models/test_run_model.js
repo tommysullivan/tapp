@@ -31,10 +31,17 @@ module.exports = function(
         status: function() {
             return testRunModelJSON.status;
         },
-        executeTestRun: function(callback) {
-            if(!supportedEnvironments.contains(this.environment())) throw exceptionsModel.newUnsupportedEnvironmentException();
-            testRunModelJSON.status = 'in progress';
-            this.component().executeTestsAgainstEnvironment(this.environment(), callback);
+        executeTestRun: function(testRunURL, callback) {
+            try {
+                if(!supportedEnvironments.contains(this.environment())) throw exceptionsModel.newUnsupportedEnvironmentException();
+                this.component().executeTestsAgainstEnvironment(testRunURL, this.environment(), callback);
+                testRunModelJSON.status = 'in progress';
+            }
+            catch(error) {
+                testRunModelJSON.status = 'error';
+                testRunModelJSON.errorMessage = error.message;
+                throw error;
+            }
         },
         applyPatch: function(patchJSON, selfURL, completionCallback) {
             if(patchJSON.hasOwnProperty('status')) testRunModelJSON.status = patchJSON.status;

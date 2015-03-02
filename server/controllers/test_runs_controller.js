@@ -4,7 +4,7 @@ module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, te
             try {
                 var testRunModel = tappAPI.newTestRunModel(request.body);
                 testRunModel.save();
-                testRunModel.executeTestRun(onComplete);
+                testRunModel.executeTestRun(testRunRoutes.testRunURL(testRunModel.id()), onComplete);
                 function onComplete() {
                     response.statusCode = 201;
                     response.append('location', testRunRoutes.testRunURL(testRunModel.id()));
