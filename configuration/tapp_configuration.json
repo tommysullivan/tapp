@@ -26,6 +26,7 @@
         }
     ],
     "deploymentNotificationContentType": "application/vnd.lookout.deploydb.deployment-notification+json;version=1.0.0",
+    "deploymentNotificationsListContentType": "application/vnd.lookout.deploydb.deployment-notification-list+json;version=1.0.0",
     "testRunsContentType": "application/vnd.lookout.pa.test-run+json;version=1.0.0",
     "testRunsListContentType": "application/vnd.lookout.pa.test-runs-list+json;version=1.0.0",
     "jenkinsCSRFCrumbURL": "https://ci.flexilis.local/crumbIssuer/api/json",

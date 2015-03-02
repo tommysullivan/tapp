@@ -7,6 +7,9 @@ module.exports = function(expressApp, router, tappAPI, baseURL, deploymentNotifi
             router.get(deploymentNotificationPath, function(req, res) {
                 tappAPI.newDeploymentNotificationsController().get(req, res, req.param('id'));
             });
+            router.get(deploymentNotificationsPath, function(req, res) {
+                tappAPI.newDeploymentNotificationsController().list(req, res);
+            });
             expressApp.use(mountPoint, router);
         },
         deploymentURL: function(deploymentId) {

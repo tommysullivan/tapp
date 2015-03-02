@@ -1,4 +1,4 @@
-module.exports = function(deploymentNotificationsModel, exceptionView, tappAPI, contentType, deploymentNotificationsRoutes) {
+module.exports = function(deploymentNotificationsModel, exceptionView, tappAPI, contentType, deploymentNotificationsRoutes, listContentType) {
     return {
         create: function(request, response) {
             try {
@@ -21,6 +21,11 @@ module.exports = function(deploymentNotificationsModel, exceptionView, tappAPI, 
             response.append('Content-Type', contentType);
             response.statusCode = 200;
             response.end(deploymentVerificationModel.toJSONString());
+        },
+        list: function(request, response) {
+            response.append('Content-Type', listContentType);
+            response.statusCode = 200;
+            response.end(deploymentNotificationsModel.toJSONString());
         }
     }
 }

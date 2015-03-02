@@ -102,3 +102,9 @@ Feature: deployment-notifications
   | expected status value |
   | passed                |
   | failed                |
+
+  Scenario: View list of deployment notifications
+    When I GET the "deployment-notifications" resource
+    Then I receive an "OK" response
+    And the Content-Type of the representation is "application/vnd.lookout.deploydb.deployment-notification-list+json;version=1.0.0"
+    And the response is a JSON array

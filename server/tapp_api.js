@@ -158,7 +158,8 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 this.newExceptionView(),
                 this,
                 paPortalConfigurationJSON['deploymentNotificationContentType'],
-                this.newDeploymentNotificationsRoutes()
+                this.newDeploymentNotificationsRoutes(),
+                paPortalConfigurationJSON['deploymentNotificationsListContentType']
             );
         },
         newDeploymentNotificationsModel: function() {
