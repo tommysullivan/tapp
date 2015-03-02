@@ -1,17 +1,22 @@
 module.exports = function(expressApp, router, tappAPI, baseURL, testRunsPath, testRunPath, mountPoint) {
     return {
         setupRouter: function() {
-            router.post(testRunsPath, function(req, res) {
-                tappAPI.newTestRunsController().create(req, res);
+            router.post(testRunsPath, function(req, response) {
+                try {
+                    tappAPI.newTestRunsController(response).create(req, response);
+                }
+                catch(exception) {
+                    tappAPI.newExceptionView().render(exception, response);
+                }
             });
-            router.get(testRunPath, function(req, res) {
-                tappAPI.newTestRunsController().get(req, res, req.param('id'));
+            router.get(testRunPath, function(req, response) {
+                tappAPI.newTestRunsController(response).get(req, response, req.param('id'));
             });
-            router.patch(testRunPath, function(req, res) {
-                tappAPI.newTestRunsController().patch(req, res, req.param('id'));
+            router.patch(testRunPath, function(req, response) {
+                tappAPI.newTestRunsController(response).patch(req, response, req.param('id'));
             });
-            router.get(testRunsPath, function(req, res) {
-                tappAPI.newTestRunsController().list(req, res);
+            router.get(testRunsPath, function(req, response) {
+                tappAPI.newTestRunsController(response).list(req, response);
             });
             expressApp.use(mountPoint, router);
         },

@@ -1,39 +1,26 @@
-module.exports = function(testRunsModel, tappAPI, exceptionView, contentType, testRunRoutes, listContentType) {
+module.exports = function(testRunsModel, tappAPI, testRunRoutes, listView, itemView, itemCreatedView, itemPatchedView) {
     return {
         create: function(request, response) {
-            try {
-                var testRunModel = tappAPI.newTestRunModel(request.body);
-                testRunModel.save();
-                testRunModel.executeTestRun(testRunRoutes.testRunURL(testRunModel.id()), onComplete);
-                function onComplete() {
-                    response.statusCode = 201;
-                    response.append('location', testRunRoutes.testRunURL(testRunModel.id()));
-                    response.end();
-                }
-            }
-            catch(exception) {
-                exceptionView.render(exception, response);
-            }
+            var testRunModel = tappAPI.newTestRunModel(request.body);
+            testRunModel.save();
+            var url = testRunRoutes.testRunURL(testRunModel.id());
+            testRunModel.executeTestRun(testRunRoutes.testRunURL(testRunModel.id()), itemCreatedView.render.bind(itemCreatedView, url));
         },
         get: function(request, response, id) {
             var testRun = testRunsModel.getById(id);
-            response.append('Content-Type', contentType);
-            response.statusCode = 200;
-            response.end(testRun.toJSONString());
+            itemView.render(testRun);
         },
         patch: function(request, response, id) {
             var testRunModel = testRunsModel.getById(id);
-            testRunModel.applyPatch(request.body, testRunRoutes.testRunURL(testRunModel.id()), completionCallback);
-            function completionCallback() {
-                testRunModel.save();
-                response.statusCode = 204;
-                response.end();
-            }
+            testRunModel.applyPatch(
+                request.body,
+                testRunRoutes.testRunURL(testRunModel.id()),
+                itemPatchedView.render.bind(itemView)
+            );
+            testRunModel.save();
         },
         list: function(request, response) {
-            response.append('Content-Type', listContentType);
-            response.statusCode = 200;
-            response.end(testRunsModel.toJSONString());
+            listView.render(testRunsModel);
         }
     }
 }

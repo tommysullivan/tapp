@@ -19,6 +19,9 @@ var ComponentModel = require('./models/component_model');
 var ComponentsModel = require('./models/components_model');
 var DoNothingTestJob = require('./models/do_nothing_test_job');
 var JenkinsTestJob = require('./models/jenkins_test_job');
+var JSONView = require('./views/json_view');
+var ItemCreatedView = require('./views/item_created_view');
+var ItemPatchedView = require('./views/item_patched_view');
 
 module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp) {
     var nextSaveId = 0;
@@ -78,6 +81,13 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             return new DoNothingTestJob();
         },
 
+        newItemCreatedView: function(response) {
+            return ItemCreatedView(response);
+        },
+        newItemPatchedView: function(response) {
+            return ItemPatchedView(response);
+        },
+
         //EXTERNAL ROUTES
         newExternalRoutes: function() {
             return new ExternalRoutes(
@@ -115,14 +125,21 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
         newTestRunsModel: function() {
             return new TestRunsModel(testRunModelsArray);
         },
-        newTestRunsController: function() {
+        newTestRunsView: function(response) {
+            return new JSONView(response, paPortalConfigurationJSON['testRunsListContentType']);
+        },
+        newTestRunItemView: function(response) {
+            return new JSONView(response, paPortalConfigurationJSON['testRunContentType']);
+        },
+        newTestRunsController: function(response) {
             return new TestRunsController(
                 this.newTestRunsModel(),
                 this,
-                this.newExceptionView(),
-                paPortalConfigurationJSON['testRunsContentType'],
                 this.newTestRunRoutes(),
-                paPortalConfigurationJSON['testRunsListContentType']
+                this.newTestRunsView(response),
+                this.newTestRunItemView(response),
+                this.newItemCreatedView(response),
+                this.newItemPatchedView(response)
             );
         },
         newTestRunModel: function(testRunModelJSON) {
@@ -140,6 +157,7 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
             );
         },
 
+
         //DEPLOYMENT NOTIFICATIONS
         newDeploymentNotificationsRoutes: function() {
             return new DeploymentNotificationsRoutes(
@@ -152,14 +170,20 @@ module.exports = function(paPortalConfigurationJSON, expressPackage, expressApp)
                 paPortalConfigurationJSON['mountPoint']
             );
         },
-        newDeploymentNotificationsController: function() {
+        newDeploymentNotificationsView: function(response) {
+            return new JSONView(response, paPortalConfigurationJSON['deploymentNotificationsListContentType']);
+        },
+        newDeploymentNotificationView: function(response) {
+            return JSONView(response, paPortalConfigurationJSON['deploymentNotificationContentType']);
+        },
+        newDeploymentNotificationsController: function(response) {
             return new DeploymentNotificationsController(
                 this.newDeploymentNotificationsModel(),
-                this.newExceptionView(),
                 this,
-                paPortalConfigurationJSON['deploymentNotificationContentType'],
                 this.newDeploymentNotificationsRoutes(),
-                paPortalConfigurationJSON['deploymentNotificationsListContentType']
+                this.newDeploymentNotificationsView(response),
+                this.newDeploymentNotificationView(response),
+                this.newItemCreatedView(response)
             );
         },
         newDeploymentNotificationsModel: function() {
